@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `collection`
 --
 
-CREATE TABLE `collection` (
+CREATE TABLE `collections` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
@@ -67,7 +67,7 @@ CREATE TABLE `collection_resources` (
 CREATE TABLE `resources` (
   `id` int(11) NOT NULL,
   `url` varchar(255) NOT NULL,
-  `title` int(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
   `description` int(255) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
