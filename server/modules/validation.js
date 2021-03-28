@@ -1,4 +1,4 @@
-export function validateResourceObject(obj) {
+function validateResourceObject(obj) {
     if (!validateTitle(obj.title)) {
         return false;
     }
@@ -18,19 +18,19 @@ export function validateResourceObject(obj) {
     return true;
 }
 
-export function validateTitle(title) {
+function validateTitle(title) {
     return validateString(title);
 }
 
-export function validateDescription(description) {
+function validateDescription(description) {
     return validateString(description);
 }
 
-export function validateURL(url) {
+function validateURL(url) {
 
 }
 
-export function validateResourceType(type) {
+function validateURL(type) {
     const resourceTypes = Object.freeze(
         {
             ARTICLE: "article",
@@ -45,7 +45,7 @@ export function validateResourceType(type) {
     return false;
 }
 
-export function validateId(id) {
+function validateId(id) {
     return typeof(id) === 'number';
 }
 
@@ -56,3 +56,11 @@ function validateString(string) {
 
     return false;
 }
+
+module.exports = {
+    validateResourceObject,
+    validateTitle,
+    validateDescription,
+    validateURL,
+    validateId
+};

@@ -1,5 +1,6 @@
 //Imports
 const express = require('express');
+const bodyParser = require('body-parser');
 const credentials = require('./modules/db_credentials');
 const queries = require('./modules/sql_queries');
 const validation = require('./modules/validation');
@@ -26,7 +27,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(express.bodyParser());
+app.use(bodyParser());
 
 // ********* ROUTES
 
@@ -180,3 +181,5 @@ app.put(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
         res.status(400).end(outcomes.COLLECTION_PUT_400);
     });
 });
+
+app.listen(3000);

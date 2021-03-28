@@ -7,7 +7,7 @@
  * @param {Number} id id of resource in DB
  * @returns {Object} array of statements to execute in series
  */
-export function getResource(id) {
+function getResource(id) {
     return [`SELECT *
             FROM resources r, resource_comments rc
             WHERE r.id = ${id};`];
@@ -19,7 +19,7 @@ export function getResource(id) {
  * @param {Number} id id of collection in DB
  * @returns {Object} array of statements to execute in series
  */
-export function getCollection(id) {
+function getCollection(id) {
     return [
         `SELECT c.id c.title, c.description as c_description, c.theme, r.url, r.description AS r_description
         FROM collections c, resources r
@@ -39,7 +39,7 @@ export function getCollection(id) {
  * @param {Number} id id of resource in DB
  * @returns {Object} array of statements to execute in series
  */
-export function deleteResource(id) {
+ function deleteResource(id) {
     const statements = [];
 
     let statementOne =
@@ -67,7 +67,7 @@ export function deleteResource(id) {
  * @param {Object} resourceObject data to insert
  * @returns  {Object} array of statements to execute in series
  */
-export function postResource (resourceObject) {
+function postResource (resourceObject) {
     if (!resourceObject.title) {
         resourceObject.title = "NULL";
     }
@@ -92,7 +92,7 @@ export function postResource (resourceObject) {
  * @param {Object} collectionObject Information about new collection
  * @returns {Object} array of statements to execute in series
  */
-export function postCollectionPartOne (collectionObject) {
+function postCollectionPartOne (collectionObject) {
     if (!collectionObject.theme) {
         collectionObject.theme = "NULL";
     }
@@ -116,7 +116,7 @@ export function postCollectionPartOne (collectionObject) {
  * @param {Object} resourceIds array of DB resource ids to add
  * @returns {Object} array of statements to execute in series
  */
-export function postCollectionPartTwo(collectionId, resourceIds) {
+function postCollectionPartTwo(collectionId, resourceIds) {
     let statement = 
     `INSERT INTO collection_resources
     (collection_id, resource_id)
@@ -142,7 +142,7 @@ export function postCollectionPartTwo(collectionId, resourceIds) {
  * @param {Object} resourceIds array of DB resource ids to add
  * @returns {Object} array of statements to execute in series
  */
-export function addResourcesToCollection(collectionId, resourceIds) {
+function addResourcesToCollection(collectionId, resourceIds) {
     postCollectionPartTwo(collectionId, resourceIds);
 }
 
@@ -152,7 +152,7 @@ export function addResourcesToCollection(collectionId, resourceIds) {
  * @param {Object} collectionObject 
  * @returns {Object} array of statements to execute in series
  */
-export function putCollection(collectionObject) {
+function putCollection(collectionObject) {
     let updates = [];
     let statement = `UPDATE collections SET `;
 
@@ -185,3 +185,14 @@ export function putCollection(collectionObject) {
     return [statement];
 
 }
+
+module.exports = {
+    getResource,
+    getCollection,
+    deleteResource,
+    postResource,
+    postCollectionPartOne,
+    postCollectionPartTwo,
+    addResourcesToCollection,
+    putCollection
+};
