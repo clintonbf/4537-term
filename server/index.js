@@ -33,27 +33,36 @@ app.use(bodyParser());
 
 // ******************* resources
 app.post(`${ENDPOINT_ROOT}/resources`, (req, res) => {
-    const dbConnection = credentials.getDbConnection(USE_DEV_DB);
-
-    let data = req.body;
-
-    const querySet = queries.postResource(data);
-
-    let p = new Promise((resolve, reject) => {
-        dbConnection.query(querySet[0], (err, result) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(result.insertID);
-            }
-        });
-
+    let body;
+    req.on('data', (chunk) => {
+        if (chunk) {
+            body += chunk;
+        }
     });
 
-    p.then((newInsertId) => {
-        res.status(201).end(outcomes.RESOURCE_POST_201);
-    }).catch(err => {
-        res.status(405).end(outcomes.RESOURCE_POST_405);
+    req.on('end', () => {
+        const dbConnection = credentials.getDbConnection(USE_DEV_DB);
+
+        let data = req.body;
+
+        const querySet = queries.postResource(data);
+
+        let p = new Promise((resolve, reject) => {
+            dbConnection.query(querySet[0], (err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result.insertID);
+                }
+            });
+
+        });
+
+        p.then((newInsertId) => {
+            res.status(201).end(outcomes.RESOURCE_POST_201);
+        }).catch(err => {
+            res.status(405).end(outcomes.RESOURCE_POST_405);
+        });
     });
 });
 
@@ -117,68 +126,86 @@ app.get(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
 });
 
 app.post(`${ENDPOINT_ROOT}/collections`, (req, res) => {
-    const dbConnection = credentials.getDbConnection(USE_DEV_DB);
-
-    const collectionObj = req.body.collection;
-
-    if (!validation.validateResourceObject(collectionObj)) {
-        res.status(400).end(outcomes.ALL_BAD_DATA_4xx);
-    }
-
-    const querySetOne = queries.postCollectionPartOne(collectionObj);
-
-    let p = new Promise((resolve, reject) => {
-        dbConnection.query(querySetOne[0], (err, result) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(result.insertID);
-            }
-        });
+    let body;
+    req.on('data', (chunk) => {
+        if (chunk) {
+            body += chunk;
+        }
     });
 
-    p.then(newId => {
-        const resourceLinks = req.body.resourceLinks;
+    req.on('end', () => {
+        const dbConnection = credentials.getDbConnection(USE_DEV_DB);
 
-        const querySetTwo = queries.postCollectionPartTwo(newId, resourceLinks);
+        const collectionObj = req.body.collection;
 
-        dbConnection.query(querySetTwo[0]);
-    }).then( (newId) => {
-        res.status(201).end(outcomes.COLLECTION_POST_201);
-    }).catch( (err) => {
-        res.status(405).end(outcomes.COLLECTION_POST_405);
+        if (!validation.validateResourceObject(collectionObj)) {
+            res.status(400).end(outcomes.ALL_BAD_DATA_4xx);
+        }
+
+        const querySetOne = queries.postCollectionPartOne(collectionObj);
+
+        let p = new Promise((resolve, reject) => {
+            dbConnection.query(querySetOne[0], (err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result.insertID);
+                }
+            });
+        });
+
+        p.then(newId => {
+            const resourceLinks = req.body.resourceLinks;
+
+            const querySetTwo = queries.postCollectionPartTwo(newId, resourceLinks);
+
+            dbConnection.query(querySetTwo[0]);
+        }).then((newId) => {
+            res.status(201).end(outcomes.COLLECTION_POST_201);
+        }).catch((err) => {
+            res.status(405).end(outcomes.COLLECTION_POST_405);
+        });
     });
 });
 
 app.put(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
-    const dbConnection = credentials.getDbConnection(USE_DEV_DB);
-
-    const id = req.params.id;
-
-    const dataObject = req.body;
-
-    if (!validation.validateResourceObject(dataObject)) {
-        res.status(400).end(outcomes.ALL_BAD_DATA_4xx);
-    }
-
-    dataObject.id = id;
-
-    const querySet = queries.putCollection(dataObject);
-
-    let p = new Promise((resolve, reject) => {
-        dbConnection.query(querySet[0], (err, result) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(id);
-            }
-        });
+    let body;
+    req.on('data', (chunk) => {
+        if (chunk) {
+            body += chunk;
+        }
     });
 
-    p.then((id) => {
-        res.status(204).end(outcomes.COLLECTION_PUT_204);
-    }).catch((err) => {
-        res.status(400).end(outcomes.COLLECTION_PUT_400);
+    req.on('end', () => {
+        const dbConnection = credentials.getDbConnection(USE_DEV_DB);
+
+        const id = req.params.id;
+
+        const dataObject = req.body;
+
+        if (!validation.validateResourceObject(dataObject)) {
+            res.status(400).end(outcomes.ALL_BAD_DATA_4xx);
+        }
+
+        dataObject.id = id;
+
+        const querySet = queries.putCollection(dataObject);
+
+        let p = new Promise((resolve, reject) => {
+            dbConnection.query(querySet[0], (err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(id);
+                }
+            });
+        });
+
+        p.then((id) => {
+            res.status(204).end(outcomes.COLLECTION_PUT_204);
+        }).catch((err) => {
+            res.status(400).end(outcomes.COLLECTION_PUT_400);
+        });
     });
 });
 
