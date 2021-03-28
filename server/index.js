@@ -45,9 +45,37 @@ app.post(`${ENDPOINT_ROOT}/resources`, (req, res) => {
     });
 
     p.then((newInsertId) => {
-        res.status(201).send(`New id: ${newInsertId}`)
+        res.status(201).end(`New id: ${newInsertId}`)
     }).catch(err => {
         throw err;
     });
-})
+});
+
+app.delete(`${ENDPOINT_ROOT}/resources/:id`, (req, res) => {
+    const id = req.params.id;
+
+    const querySet = queries.deleteResource(id);
+
+    let p = new Promise((resolve, reject) => {
+        dbConnection.query(querySet[0], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(id);
+            }
+        });
+    });
+
+    p.then( (id) => {
+        dbConnection.query (querySet[1]);
+    }).then( (id) => {
+        dbConnection.query (querySet[2]);
+    }).then( (id) => {
+        res.status(204).end(`Deleted id ${id}`);
+    }).
+    catch(err => {
+        res.status(400).end("Invalid id supplied");
+    });
+
+});
 
