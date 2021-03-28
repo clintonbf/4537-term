@@ -297,9 +297,6 @@
           },
           "400": {
             "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Collection not found"
           }
         },
         "security": [
@@ -333,9 +330,6 @@
         "responses": {
           "400": {
             "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Collection not found"
           },
           "204" : {
             "description": "Delete successful"
@@ -417,10 +411,7 @@
         ],
         "responses": {
           "400": {
-            "description": "Invalid ID supplied"
-          },
-          "405": {
-            "description": "Validation exception"
+            "description": "Bad data supplied"
           },
           "204": {
             "description": "Resource updated successfully"
