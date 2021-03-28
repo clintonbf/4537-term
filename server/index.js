@@ -50,9 +50,9 @@ app.post(`${ENDPOINT_ROOT}/resources`, (req, res) => {
     });
 
     p.then((newInsertId) => {
-        res.status(201).end(outcomes.resource.post.succes201);
+        res.status(201).end(outcomes.RESOURCE_POST_201);
     }).catch(err => {
-        res.status(405).end(outcomes.resource.post.fail405);
+        res.status(405).end(outcomes.RESOURCE_POST_405);
     });
 });
 
@@ -73,27 +73,80 @@ app.delete(`${ENDPOINT_ROOT}/resources/:id`, (req, res) => {
         });
     });
 
-    p.then( (id) => {
-        dbConnection.query (querySet[1]);
-    }).then( (id) => {
-        dbConnection.query (querySet[2]);
-    }).then( (id) => {
-        res.status(204).end(outcomes.resource.delete.succes201);
+    p.then((id) => {
+        dbConnection.query(querySet[1]);
+    }).then((id) => {
+        dbConnection.query(querySet[2]);
+    }).then((id) => {
+        res.status(204).end(outcomes.RESOURCE_DELETE_201);
     }).
-    catch(err => {
-        res.status(400).end(outcomes.resource.delete.fail400);
-    });
+        catch(err => {
+            res.status(400).end(outcomes.RESOURCE_DELETE_400);
+        });
 
 });
 
 
 // ******************* collection
 app.get(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
+    const dbConnection = credentials.getDbConnection(USE_DEV_DB);
 
+    if (!validation.validateId(req.params.id)) {
+        res.status(400).end(outcomes.ALL_BAD_DATA_4xx);
+    }
+
+    const querySet = queries.getCollection(req.params.id);
+
+    const p = new Promise((resolve, reject) => {
+        dbConnection.query(querySet[0], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(query.results);
+            }
+        });
+    });
+
+    p.then(data => {
+        res.status(204).send(outcomes.COLLECTION_GET_200);
+        res.end(data);
+    }).catch(err => {
+        res.status(400).end(outcomes.COLLECTION_GET_400);
+    })
 });
 
 app.post(`${ENDPOINT_ROOT}/collections`, (req, res) => {
+    const dbConnection = credentials.getDbConnection(USE_DEV_DB);
 
+    const collectionObj = req.body.collection;
+
+    if (!validation.validateResourceObject(collectionObj)) {
+        res.status(400).end(outcomes.ALL_BAD_DATA_4xx);
+    }
+
+    const querySetOne = queries.postCollectionPartOne(collectionObj);
+
+    let p = new Promise((resolve, reject) => {
+        dbConnection.query(querySetOne[0], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result.insertID);
+            }
+        });
+    });
+
+    p.then(newId => {
+        const resourceLinks = req.body.resourceLinks;
+
+        const querySetTwo = queries.postCollectionPartTwo(newId, resourceLinks);
+
+        dbConnection.query(querySetTwo[0]);
+    }).then( (newId) => {
+        res.status(201).end(outcomes.COLLECTION_POST_201);
+    }).catch( (err) => {
+        res.status(405).end(outcomes.COLLECTION_POST_405);
+    });
 });
 
 app.put(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
@@ -103,15 +156,15 @@ app.put(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
 
     const dataObject = req.body;
 
-    if (! validation.validateResourceObject(dataObject)) {
-        res.status(400).end("Bad data supplied");
+    if (!validation.validateResourceObject(dataObject)) {
+        res.status(400).end(outcomes.ALL_BAD_DATA_4xx);
     }
 
     dataObject.id = id;
 
     const querySet = queries.putCollection(dataObject);
 
-    let p = new Promise( (resolve, reject) => {
+    let p = new Promise((resolve, reject) => {
         dbConnection.query(querySet[0], (err, result) => {
             if (err) {
                 reject(err);
@@ -120,12 +173,10 @@ app.put(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
             }
         });
     });
-    
-    p.then( (id) => {
-        res.status(204).end(outcomes.collection.put.success204);
-    }).catch( (err) => {
-        res.status(400).end(outcomes.collection.put.failure400);
+
+    p.then((id) => {
+        res.status(204).end(outcomes.COLLECTION_PUT_204);
+    }).catch((err) => {
+        res.status(400).end(outcomes.COLLECTION_PUT_400);
     });
-
 });
-
