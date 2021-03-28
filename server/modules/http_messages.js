@@ -1,31 +1,14 @@
-export function getHttpMessages()
-return {
-    resource: {
-        get: {},
-        post: {
-            success201: 'New resource added.',
-            fail405: 'Resource creation failed.'
-        },
-        put: {},
-        delete: {
-            success204: 'resource deleted.',
-            success400: 'unable to delete resource.'
-        }
-    },
-    collection: {
-        get: {
-            success200: 'Collection retrieved.',
-            failure400: 'Collection not retrieved.'
-        },
-        post: {
-            success201: "New collection added.",
-            failure405: "Unable to add collection."
+export const RESOURCE_POST_201 = 'New resource added.';
+export const RESOURCE_POST_405 = 'Resource creation failed.';
 
-        },
-        put: {},
-        delete: {
-            success204: 'Collection deleted.',
-            failure400: 'Unable to delete collection.'
-        }
-    }
-}
+export const RESOURCE_DELETE_201 = 'resource deleted.';
+export const RESOURCE_DELETE_400 = 'unable to delete resource.';
+
+export const COLLECTION_GET_200 = 'Collection retrieved.';
+export const COLLECTION_GET_400 = 'Collection not retrieved.';
+
+export const COLLECTION_POST_201 = "New collection added.";
+export const COLLECTION_POST_405 = "Unable to add collection.";
+
+export const COLLECTION_PUT_204 = 'Collection deleted.';
+export const COLLECTION_PUT_400 = 'Unable to delete collection.';
