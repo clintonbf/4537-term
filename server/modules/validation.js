@@ -45,6 +45,10 @@ export function validateResourceType(type) {
     return false;
 }
 
+export function validateId(id) {
+    return typeof(id) === 'number';
+}
+
 function validateString(string) {
     if (string.length < 256) {
         return true;
