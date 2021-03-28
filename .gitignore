@@ -1,3 +1,5 @@
+./server/modules/db_credentials.js
+
 # Logs
 logs
 *.log
