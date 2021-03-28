@@ -264,47 +264,6 @@
             "description": "Successful post"
           }
         }
-      },
-      "put": {
-        "tags": [
-          "collections"
-        ],
-        "summary": "Update a collection",
-        "description": "Update an existing collection of video and article links",
-        "operationId": "updateCollection",
-        "consumes": [
-          "application/json",
-          "application/xml"
-        ],
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "resource",
-            "description": "Resource that needs to be updated",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ResourceForPut"
-            }
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Resource not found"
-          },
-          "405": {
-            "description": "Validation exception"
-          },
-          "204": {
-            "description": "Resource updated successfully"
-          }
-        }
       }
     },
     "/collections/{collectionId}": {
@@ -427,6 +386,44 @@
           },
           "400": {
             "description": "Invalid ID supplied"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "collections"
+        ],
+        "summary": "Update a collection",
+        "description": "Update an existing collection of video and article links",
+        "operationId": "updateCollection",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "resource",
+            "description": "Resource that needs to be updated",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ResourceForPut"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "405": {
+            "description": "Validation exception"
+          },
+          "204": {
+            "description": "Resource updated successfully"
           }
         }
       }
