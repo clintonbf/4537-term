@@ -12,3 +12,5 @@ export const COLLECTION_POST_405 = "Unable to add collection.";
 
 export const COLLECTION_PUT_204 = 'Collection deleted.';
 export const COLLECTION_PUT_400 = 'Unable to delete collection.';
+
+export const ALL_BAD_DATA_4xx = 'Bad data supplied';
