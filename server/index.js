@@ -3,6 +3,7 @@ const express = require('express');
 const credentials = require('./modules/db_credentials');
 const queries = require('./modules/sql_queries');
 const validation = require('./modules/validation');
+const outcomes = require('./modules/http_messages');
 
 // HTTP method definitions
 const GET = 'GET';
@@ -49,9 +50,9 @@ app.post(`${ENDPOINT_ROOT}/resources`, (req, res) => {
     });
 
     p.then((newInsertId) => {
-        res.status(201).end(`New id: ${newInsertId}`)
+        res.status(201).end(outcomes.resource.post.succes201);
     }).catch(err => {
-        throw err;
+        res.status(405).end(outcomes.resource.post.fail405);
     });
 });
 
@@ -77,21 +78,21 @@ app.delete(`${ENDPOINT_ROOT}/resources/:id`, (req, res) => {
     }).then( (id) => {
         dbConnection.query (querySet[2]);
     }).then( (id) => {
-        res.status(204).end(`Deleted id ${id}`);
+        res.status(204).end(outcomes.resource.delete.succes201);
     }).
     catch(err => {
-        res.status(400).end("Invalid id supplied");
+        res.status(400).end(outcomes.resource.delete.fail400);
     });
 
 });
 
 
 // ******************* collection
-app.post(`${ENDPOINT_ROOT}/collections`, (req, res) => {
+app.get(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
 
 });
 
-app.get(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
+app.post(`${ENDPOINT_ROOT}/collections`, (req, res) => {
 
 });
 
@@ -101,6 +102,11 @@ app.put(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
     const id = req.params.id;
 
     const dataObject = req.body;
+
+    if (! validation.validateResourceObject(dataObject)) {
+        res.status(400).end("Bad data supplied");
+    }
+
     dataObject.id = id;
 
     const querySet = queries.putCollection(dataObject);
@@ -116,9 +122,9 @@ app.put(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
     });
     
     p.then( (id) => {
-        res.status(204).end(`Collection ${id} updated`);
+        res.status(204).end(outcomes.collection.put.success204);
     }).catch( (err) => {
-        res.status(400).end('Invalid id');
+        res.status(400).end(outcomes.collection.put.failure400);
     });
 
 });
