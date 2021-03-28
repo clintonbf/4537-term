@@ -2,6 +2,7 @@
 const express = require('express');
 const credentials = require('./modules/db_credentials');
 const queries = require('./modules/sql_queries');
+const validation = require('./modules/validation');
 
 // HTTP method definitions
 const GET = 'GET';
@@ -26,15 +27,18 @@ app.use((req, res, next) => {
 
 app.use(express.bodyParser());
 
-// *************** ROUTES
+// ********* ROUTES
 
+// ******************* resources
 app.post(`${ENDPOINT_ROOT}/resources`, (req, res) => {
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
 
     let data = req.body;
 
+    const querySet = queries.postResource(data);
+
     let p = new Promise((resolve, reject) => {
-        dbConnection.query(queries.postResource(data), (err, result) => {
+        dbConnection.query(querySet[0], (err, result) => {
             if (err) {
                 reject(err);
             } else {
@@ -52,6 +56,8 @@ app.post(`${ENDPOINT_ROOT}/resources`, (req, res) => {
 });
 
 app.delete(`${ENDPOINT_ROOT}/resources/:id`, (req, res) => {
+    const dbConnection = credentials.getDbConnection(USE_DEV_DB);
+
     const id = req.params.id;
 
     const querySet = queries.deleteResource(id);
@@ -75,6 +81,44 @@ app.delete(`${ENDPOINT_ROOT}/resources/:id`, (req, res) => {
     }).
     catch(err => {
         res.status(400).end("Invalid id supplied");
+    });
+
+});
+
+
+// ******************* collection
+app.post(`${ENDPOINT_ROOT}/collections`, (req, res) => {
+
+});
+
+app.get(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
+
+});
+
+app.put(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
+    const dbConnection = credentials.getDbConnection(USE_DEV_DB);
+
+    const id = req.params.id;
+
+    const dataObject = req.body;
+    dataObject.id = id;
+
+    const querySet = queries.putCollection(dataObject);
+
+    let p = new Promise( (resolve, reject) => {
+        dbConnection.query(querySet[0], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(id);
+            }
+        });
+    });
+    
+    p.then( (id) => {
+        res.status(204).end(`Collection ${id} updated`);
+    }).catch( (err) => {
+        res.status(400).end('Invalid id');
     });
 
 });
