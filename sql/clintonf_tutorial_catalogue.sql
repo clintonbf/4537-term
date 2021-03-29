@@ -24,6 +24,12 @@ SET time_zone = "+00:00";
 
 -- --------------------------------------------------------
 
+DROP TABLE IF EXISTS collection_comments;
+DROP TABLE IF EXISTS collection_resources;
+DROP TABLE IF EXISTS collections;
+DROP TABLE IF EXISTS resource_comments;
+DROP TABLE IF EXISTS resources;
+
 --
 -- Table structure for table `collection`
 --
@@ -90,7 +96,7 @@ CREATE TABLE `resource_comments` (
 --
 -- Indexes for table `collection`
 --
-ALTER TABLE `collection`
+ALTER TABLE `collections`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -127,7 +133,7 @@ ALTER TABLE `resource_comments`
 --
 -- AUTO_INCREMENT for table `collection`
 --
-ALTER TABLE `collection`
+ALTER TABLE `collections`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
