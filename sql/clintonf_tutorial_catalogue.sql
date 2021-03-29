@@ -74,7 +74,7 @@ CREATE TABLE `resources` (
   `id` int(11) NOT NULL,
   `url` varchar(255) NOT NULL,
   `title` varchar(255) NOT NULL,
-  `description` int(255) DEFAULT NULL
+  `description` varchar(255) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
