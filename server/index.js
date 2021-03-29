@@ -101,26 +101,30 @@ app.delete(`${ENDPOINT_ROOT}/resources/:id`, (req, res) => {
 app.get(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
 
-    if (!validation.validateId(req.params.id)) {
+    if (!validation.validateId(parseInt(req.params.id))) {
         res.status(400).end(outcomes.ALL_BAD_DATA_4xx);
     }
 
     const querySet = queries.getCollection(req.params.id);
+
+    console.log(`Query: "${querySet[0]}"`);
 
     const p = new Promise((resolve, reject) => {
         dbConnection.query(querySet[0], (err, result) => {
             if (err) {
                 reject(err);
             } else {
-                resolve(query.results);
+                resolve(result);
             }
         });
     });
 
     p.then(data => {
-        res.status(204).send(outcomes.COLLECTION_GET_200);
-        res.end(data);
+        res.type('application/json');
+        res.send(data);
+        res.end();
     }).catch(err => {
+        console.log(`Error: ${err}`);
         res.status(400).end(outcomes.COLLECTION_GET_400);
     })
 });

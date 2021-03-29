@@ -4,7 +4,7 @@ exports.RESOURCE_POST_405 = 'Resource creation failed.';
 exports.RESOURCE_DELETE_201 = 'resource deleted.';
 exports.RESOURCE_DELETE_400 = 'unable to delete resource.';
 
-exports. COLLECTION_GET_200 = 'Collection retrieved.';
+exports.COLLECTION_GET_200 = 'Collection retrieved.';
 exports.COLLECTION_GET_400 = 'Collection not retrieved.';
 
 exports.COLLECTION_POST_201 = "New collection added.";
