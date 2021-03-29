@@ -21,7 +21,7 @@ function getResource(id) {
  */
 function getCollection(id) {
     return [
-        `SELECT c.id c.title, c.description as c_description, c.theme, r.url, r.description AS r_description
+        `SELECT c.id, c.title, c.description as c_description, c.theme, r.url, r.description AS r_description
         FROM collections c, resources r
         WHERE c.id = ${id}
         AND r.id IN (
