@@ -128,45 +128,42 @@ app.get(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
 });
 
 app.post(`${ENDPOINT_ROOT}/collections`, (req, res) => {
-    let body;
-    req.on('data', (chunk) => {
-        if (chunk) {
-            body += chunk;
-        }
+    const dbConnection = credentials.getDbConnection(USE_DEV_DB);
+
+    const collectionObj = req.body.collection;
+    let newCollectionId;
+
+    if (!validation.validateCollectionObject(collectionObj)) {
+        res.status(400).end(outcomes.ALL_BAD_DATA_4xx);
+        return;
+    }
+
+    const querySetOne = queries.postCollectionPartOne(collectionObj);
+    console.log(`First query: ${querySetOne[0]}`);
+
+    let p = new Promise((resolve, reject) => {
+        dbConnection.query(querySetOne[0], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                newCollectionId = result.insertId
+                resolve(newCollectionId);
+            }
+        });
     });
 
-    req.on('end', () => {
-        const dbConnection = credentials.getDbConnection(USE_DEV_DB);
+    p.then(newId => {
+        const resourceIds = req.body.resources;
 
-        const collectionObj = req.body.collection;
+        const querySetTwo = queries.postCollectionPartTwo(newId, resourceIds);
+        console.log(`Second query: ${querySetTwo[0]}`);
+        dbConnection.query(querySetTwo[0]);
+    }).then(() => {
+        res.type('application/json');
+        res.json({ inserted_id: newCollectionId });
 
-        if (!validation.validateResourceObject(collectionObj)) {
-            res.status(400).end(outcomes.ALL_BAD_DATA_4xx);
-        }
-
-        const querySetOne = queries.postCollectionPartOne(collectionObj);
-
-        let p = new Promise((resolve, reject) => {
-            dbConnection.query(querySetOne[0], (err, result) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(result.insertID);
-                }
-            });
-        });
-
-        p.then(newId => {
-            const resourceLinks = req.body.resourceLinks;
-
-            const querySetTwo = queries.postCollectionPartTwo(newId, resourceLinks);
-
-            dbConnection.query(querySetTwo[0]);
-        }).then((newId) => {
-            res.status(201).end(outcomes.COLLECTION_POST_201);
-        }).catch((err) => {
-            res.status(405).end(outcomes.COLLECTION_POST_405);
-        });
+    }).catch((err) => {
+        res.status(405).end(outcomes.COLLECTION_POST_405);
     });
 });
 
