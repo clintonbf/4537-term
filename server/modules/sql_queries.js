@@ -21,7 +21,7 @@ function getResource(id) {
  */
 function getCollection(id) {
     return [
-        `SELECT c.id, c.title, c.description as c_description, c.theme, r.url, r.description AS r_description
+        `SELECT c.id as collection_id, c.title, c.description as c_description, c.theme, r.url, r.description AS r_description
         FROM collections c, resources r
         WHERE c.id = ${id}
         AND r.id IN (
@@ -43,7 +43,7 @@ function getCollection(id) {
     const statements = [];
 
     let statementOne =
-        `DELETE FROM resouces_comments
+        `DELETE FROM resource_comments
     WHERE id = ${id};`
 
     let statementTwo =
@@ -52,7 +52,7 @@ function getCollection(id) {
 
     let statementThree =
         `DELETE FROM resources
-    WHERE resource_id = ${id};`
+    WHERE id = ${id};`
 
     statements.push(statementOne);
     statements.push(statementTwo);
@@ -69,18 +69,18 @@ function getCollection(id) {
  */
 function postResource (resourceObject) {
     if (!resourceObject.title) {
-        resourceObject.title = "NULL";
+        resourceObject.title = null;
     }
 
     if (!resourceObject.description) {
-        resourceObject.description = "NULL";
+        resourceObject.description = null;
     }
 
     return [
-        `INSERT INTO resource
+        `INSERT INTO resources
         (url, type, title, description)
         VALUES
-        (${resourceObject.url}, ${resourceObject.type}, ${resourceObject.title}, ${resourceObject.description});`
+        ('${resourceObject.url}', '${resourceObject.type}', '${resourceObject.title}', '${resourceObject.description}');`
     ];
 }
 
