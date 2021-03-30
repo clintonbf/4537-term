@@ -105,7 +105,7 @@ function postCollectionPartOne (collectionObject) {
         `INSERT INTO collections
         (title, description, theme)
         VALUES
-        (${collectionObject.title}, ${collectionObject.description}, ${collectionObject.theme})`
+        ('${collectionObject.title}', '${collectionObject.description}', '${collectionObject.theme}');`
     ];
 }
 
