@@ -168,43 +168,35 @@ app.post(`${ENDPOINT_ROOT}/collections`, (req, res) => {
 });
 
 app.put(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
-    let body;
-    req.on('data', (chunk) => {
-        if (chunk) {
-            body += chunk;
-        }
+    const dbConnection = credentials.getDbConnection(USE_DEV_DB);
+
+    const id = req.params.id;
+    const dataObject = req.body;
+    dataObject.id = id;
+
+    if (!validation.validateCollectionObject(dataObject)) {
+        res.status(400).end(outcomes.ALL_BAD_DATA_4xx);
+    }
+
+    const querySet = queries.putCollection(dataObject);
+    console.log(`Query: ${querySet[0]}`);
+
+    let p = new Promise((resolve, reject) => {
+        dbConnection.query(querySet[0], (err, result) => {
+            if (err) {
+                console.error(err);
+                reject(err);
+            } else {
+                resolve(result.affectedRows);
+            }
+        });
     });
 
-    req.on('end', () => {
-        const dbConnection = credentials.getDbConnection(USE_DEV_DB);
-
-        const id = req.params.id;
-
-        const dataObject = req.body;
-
-        if (!validation.validateResourceObject(dataObject)) {
-            res.status(400).end(outcomes.ALL_BAD_DATA_4xx);
-        }
-
-        dataObject.id = id;
-
-        const querySet = queries.putCollection(dataObject);
-
-        let p = new Promise((resolve, reject) => {
-            dbConnection.query(querySet[0], (err, result) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(id);
-                }
-            });
-        });
-
-        p.then((id) => {
-            res.status(204).end(outcomes.COLLECTION_PUT_204);
-        }).catch((err) => {
-            res.status(400).end(outcomes.COLLECTION_PUT_400);
-        });
+    p.then((affectedRows) => {
+        res.type('application/json');
+        res.json({ records_updated: affectedRows });
+    }).catch((err) => {
+        res.status(400).end(outcomes.COLLECTION_PUT_400);
     });
 });
 
