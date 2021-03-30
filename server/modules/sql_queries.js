@@ -94,11 +94,11 @@ function postResource (resourceObject) {
  */
 function postCollectionPartOne (collectionObject) {
     if (!collectionObject.theme) {
-        collectionObject.theme = "NULL";
+        collectionObject.theme = null;
     }
 
     if (!collectionObject.description) {
-        collectionObject.description = "NULL";
+        collectionObject.description = null;
     }
 
     return [
