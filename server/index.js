@@ -33,36 +33,28 @@ app.use(bodyParser());
 
 // ******************* resources
 app.post(`${ENDPOINT_ROOT}/resources`, (req, res) => {
-    let body;
-    req.on('data', (chunk) => {
-        if (chunk) {
-            body += chunk;
-        }
+    const dbConnection = credentials.getDbConnection(USE_DEV_DB);
+
+    const querySet = queries.postResource(req.body);
+
+    console.log(`Query: ${querySet[0]}`);
+
+    let p = new Promise((resolve, reject) => {
+        dbConnection.query(querySet[0], (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results.insertId);
+            }
+        });
+
     });
 
-    req.on('end', () => {
-        const dbConnection = credentials.getDbConnection(USE_DEV_DB);
-
-        let data = req.body;
-
-        const querySet = queries.postResource(data);
-
-        let p = new Promise((resolve, reject) => {
-            dbConnection.query(querySet[0], (err, result) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(result.insertID);
-                }
-            });
-
-        });
-
-        p.then((newInsertId) => {
-            res.status(201).end(outcomes.RESOURCE_POST_201);
-        }).catch(err => {
-            res.status(405).end(outcomes.RESOURCE_POST_405);
-        });
+    p.then((newInsertId) => {
+        res.type('application/json');
+        res.json({ inserted_id: newInsertId });
+    }).catch(err => {
+        res.status(405).end(outcomes.RESOURCE_POST_405);
     });
 });
 
@@ -74,6 +66,7 @@ app.delete(`${ENDPOINT_ROOT}/resources/:id`, (req, res) => {
     const querySet = queries.deleteResource(id);
 
     let p = new Promise((resolve, reject) => {
+        console.log(`Query 1: ${querySet[0]}`);
         dbConnection.query(querySet[0], (err, result) => {
             if (err) {
                 reject(err);
@@ -84,16 +77,21 @@ app.delete(`${ENDPOINT_ROOT}/resources/:id`, (req, res) => {
     });
 
     p.then((id) => {
+        console.log(`Query 2: ${querySet[1]}`);
+
         dbConnection.query(querySet[1]);
     }).then((id) => {
+        console.log(`Query 3: ${querySet[2]}`);
+
         dbConnection.query(querySet[2]);
     }).then((id) => {
-        res.status(204).end(outcomes.RESOURCE_DELETE_201);
+        res.type('application/json');
+        res.json({ outcome: outcomes.RESOURCE_DELETE_201 });
+        res.end();
     }).
         catch(err => {
             res.status(400).end(outcomes.RESOURCE_DELETE_400);
         });
-
 });
 
 
