@@ -18,6 +18,27 @@ function validateResourceObject(obj) {
     return true;
 }
 
+
+function validateCollectionObject(obj) {
+    if (!validateTitle(obj.title)) {
+        return false;
+    }
+
+    if (!validateDescription(obj.description)) {
+        return false;
+    }
+
+    if (!validateTheme(obj.theme)) {
+        return false;
+    }
+
+    return true;
+}
+
+function validateTheme(theme) {
+    return validateString(theme);
+}
+
 function validateTitle(title) {
     return validateString(title);
 }
@@ -59,6 +80,7 @@ function validateString(string) {
 
 module.exports = {
     validateResourceObject,
+    validateCollectionObject,
     validateTitle,
     validateDescription,
     validateURL,
