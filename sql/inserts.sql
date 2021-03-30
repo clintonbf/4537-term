@@ -15,3 +15,10 @@ INSERT INTO collection_resources
 VALUES
 (1, 1),
 (3, 1);
+
+INSERT INTO resource_comments
+(resource_id, comment)
+VALUES
+(1, "What a great video"),
+(1, "I'd like a banana"),
+(4, "CASH MONEY!");
