@@ -1,17 +1,17 @@
 function validateResourceObject(obj) {
-    if (!validateTitle(obj.title)) {
+    if (obj.title && !validateTitle(obj.title)) {
         return false;
     }
 
-    if (!validateDescription(obj.description)) {
+    if (obj.description && !validateDescription(obj.description)) {
         return false;
     }
 
-    if (!validateURL(obj.url)) {
+    if (obj.url && !validateURL(obj.url)) {
         return false;
     }
 
-    if (!validateResourceType(obj.type)) {
+    if (obj.type && !validateResourceType(obj.type)) {
         return false;
     }
 
@@ -20,15 +20,15 @@ function validateResourceObject(obj) {
 
 
 function validateCollectionObject(obj) {
-    if (!validateTitle(obj.title)) {
+    if (obj.title && !validateTitle(obj.title)) {
         return false;
     }
 
-    if (!validateDescription(obj.description)) {
+    if (obj.description && !validateDescription(obj.description)) {
         return false;
     }
 
-    if (!validateTheme(obj.theme)) {
+    if (obj.theme && !validateTheme(obj.theme)) {
         return false;
     }
 

@@ -10,7 +10,7 @@ exports.COLLECTION_GET_400 = 'Collection not retrieved.';
 exports.COLLECTION_POST_201 = "New collection added.";
 exports.COLLECTION_POST_405 = "Unable to add collection.";
 
-exports.COLLECTION_PUT_204 = 'Collection deleted.';
-exports.COLLECTION_PUT_400 = 'Unable to delete collection.';
+exports.COLLECTION_PUT_204 = 'Collection updated.';
+exports.COLLECTION_PUT_400 = 'Unable to update collection.';
 
 exports.ALL_BAD_DATA_4xx = 'Bad data supplied';
