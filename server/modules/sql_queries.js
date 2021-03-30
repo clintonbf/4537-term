@@ -179,6 +179,25 @@ function putCollection(collectionObject) {
     return [statement];
 }
 
+
+function getRandomResouce() {
+    // This don't work
+    //SELECT * FROM resources r INNER JOIN resource_comments rc ON r.id = rc.resource_id WHERE r.id = (SELECT id FROM resources ORDER BY RAND() LIMIT 1);
+
+    return [
+        "SELECT * FROM resources ORDER BY RAND() LIMIT 1;"
+    ];
+}
+
+
+function getResourceComments(resourceId) {
+    return [
+        `SELECT id, comment
+        FROM resource_comments
+        WHERE resource_id = ${resourceId};`
+    ];
+}
+
 module.exports = {
     getResource,
     getCollection,
@@ -187,5 +206,7 @@ module.exports = {
     postCollectionPartOne,
     postCollectionPartTwo,
     addResourcesToCollection,
-    putCollection
+    putCollection,
+    getRandomResouce,
+    getResourceComments
 };
