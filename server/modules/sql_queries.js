@@ -39,7 +39,7 @@ function getCollection(id) {
  * @param {Number} id id of resource in DB
  * @returns {Object} array of statements to execute in series
  */
- function deleteResource(id) {
+function deleteResource(id) {
     const statements = [];
 
     let statementOne =
@@ -67,7 +67,7 @@ function getCollection(id) {
  * @param {Object} resourceObject data to insert
  * @returns  {Object} array of statements to execute in series
  */
-function postResource (resourceObject) {
+function postResource(resourceObject) {
     if (!resourceObject.title) {
         resourceObject.title = null;
     }
@@ -92,7 +92,7 @@ function postResource (resourceObject) {
  * @param {Object} collectionObject Information about new collection
  * @returns {Object} array of statements to execute in series
  */
-function postCollectionPartOne (collectionObject) {
+function postCollectionPartOne(collectionObject) {
     if (!collectionObject.theme) {
         collectionObject.theme = null;
     }
@@ -117,8 +117,8 @@ function postCollectionPartOne (collectionObject) {
  * @returns {Object} array of statements to execute in series
  */
 function postCollectionPartTwo(collectionId, resourceIds) {
-    let statement = 
-    `INSERT INTO collection_resources
+    let statement =
+        `INSERT INTO collection_resources
     (collection_id, resource_id)
     VALUES`;
 
@@ -157,33 +157,26 @@ function putCollection(collectionObject) {
     let statement = `UPDATE collections SET `;
 
     if (collectionObject.title) {
-        updates.push(
-            `title = ${collectionObject.title}`
-        );
+        updates.push(`title = '${collectionObject.title}'`);
     }
 
     if (collectionObject.theme) {
-        updates.push(
-            `theme = ${collectionObject.theme}`
-        );
+        updates.push(`theme = '${collectionObject.theme}'`);
     }
 
     if (collectionObject.description) {
-        updates.push(
-            `description = ${collectionObject.description}`
-        );
+        updates.push(`description = '${collectionObject.description}'`);
     }
 
     for (let i = 0; i < updates.length - 1; i++) {
         statement += updates[i] + ', ';
     }
 
-    statement += updates[updates.length] + ' ';
-    
-    statement +=`WHERE id = ${collectionObject.id};`;
+    statement += updates[updates.length - 1] + ' ';
+
+    statement += `WHERE id = ${collectionObject.id};`;
 
     return [statement];
-
 }
 
 module.exports = {
