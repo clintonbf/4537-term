@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 27, 2021 at 11:40 AM
+-- Generation Time: Mar 30, 2021 at 11:51 PM
 -- Server version: 10.3.28-MariaDB-log
 -- PHP Version: 7.3.27
 
@@ -24,14 +24,15 @@ SET time_zone = "+00:00";
 
 -- --------------------------------------------------------
 
+DROP TABLE IF EXISTS collections;
 DROP TABLE IF EXISTS collection_comments;
 DROP TABLE IF EXISTS collection_resources;
-DROP TABLE IF EXISTS collections;
-DROP TABLE IF EXISTS resource_comments;
 DROP TABLE IF EXISTS resources;
+DROP TABLE IF EXISTS resource_comments;
+DROP TABLE IF EXISTS stats;
 
 --
--- Table structure for table `collection`
+-- Table structure for table `collections`
 --
 
 CREATE TABLE `collections` (
@@ -73,7 +74,7 @@ CREATE TABLE `collection_resources` (
 CREATE TABLE `resources` (
   `id` int(11) NOT NULL,
   `url` varchar(255) NOT NULL,
-  `title` varchar(255) NULL,
+  `title` varchar(255) DEFAULT NULL,
   `type` varchar(255) NOT NULL,
   `description` varchar(255) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -90,12 +91,25 @@ CREATE TABLE `resource_comments` (
   `comment` varchar(255) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `stats`
+--
+
+CREATE TABLE `stats` (
+  `id` int(11) NOT NULL,
+  `method` varchar(10) NOT NULL,
+  `endpoint` varchar(255) NOT NULL,
+  `hits` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `collection`
+-- Indexes for table `collections`
 --
 ALTER TABLE `collections`
   ADD PRIMARY KEY (`id`);
@@ -128,11 +142,17 @@ ALTER TABLE `resource_comments`
   ADD KEY `resource_id` (`resource_id`);
 
 --
+-- Indexes for table `stats`
+--
+ALTER TABLE `stats`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `collection`
+-- AUTO_INCREMENT for table `collections`
 --
 ALTER TABLE `collections`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
@@ -153,6 +173,12 @@ ALTER TABLE `resources`
 -- AUTO_INCREMENT for table `resource_comments`
 --
 ALTER TABLE `resource_comments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `stats`
+--
+ALTER TABLE `stats`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 

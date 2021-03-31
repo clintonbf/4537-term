@@ -22,3 +22,18 @@ VALUES
 (1, "What a great video"),
 (1, "I'd like a banana"),
 (4, "CASH MONEY!");
+
+INSERT INTO stats
+(method, endpoint, hits)
+VALUES
+('POST', '/resources', 0),
+('PUT', '/resources', 0),
+('GET', '/resources/{resourceId}', 0),
+('DELETE', '/resources/{resourceId}', 0),
+('POST', '/resources/{resourceId}', 0),
+('POST', '/collections', 0),
+('GET', '/collections/{collectionId}', 0),
+('DELETE', '/collections/{collectionId}', 0),
+('POST', '/collections/{collectionId}', 0),
+('PUT', '/collections/{collectionId}', 0);
+
