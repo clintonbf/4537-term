@@ -120,16 +120,6 @@
           "application/xml",
           "application/json"
         ],
-        "parameters": [
-          {
-            "name": "resourceId",
-            "in": "path",
-            "description": "ID of resource to return",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
         "responses": {
           "200": {
             "description": "successful operation",
@@ -161,17 +151,6 @@
           "application/xml",
           "application/json"
         ],
-        "parameters": [
-          {
-            "name": "resourceId",
-            "in": "path",
-            "description": "ID of the resource that needs to be deleted",
-            "required": true,
-            "type": "integer",
-            "minimum": 1,
-            "format": "int64"
-          }
-        ],
         "responses": {
           "400": {
             "description": "Invalid ID supplied"
@@ -196,26 +175,6 @@
           "application/xml",
           "application/json"
         ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "resourceId",
-            "description": "ID of the resource being commented on",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ResourceForPut"
-            }
-          },
-          {
-            "in": "body",
-            "name": "comment",
-            "description": "The comment to add to the resource",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ResourceForPut"
-            }
-          }
-        ],
         "responses": {
           "405": {
             "description": "Invalid input"
@@ -227,7 +186,16 @@
             "description": "Invalid ID supplied"
           }
         }
-      }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "resourceId",
+          "description": "ID of the resource being commented on",
+          "required": true,
+          "type": "integer"
+        }
+      ]
     },
     "/collections" : {
       "post": {
@@ -278,16 +246,6 @@
           "application/xml",
           "application/json"
         ],
-        "parameters": [
-          {
-            "name": "collectionId",
-            "in": "path",
-            "description": "ID of collection to return",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
         "responses": {
           "200": {
             "description": "successful operation",
@@ -316,17 +274,6 @@
           "application/xml",
           "application/json"
         ],
-        "parameters": [
-          {
-            "name": "collectionId",
-            "in": "path",
-            "description": "ID of the collection that needs to be deleted",
-            "required": true,
-            "type": "integer",
-            "minimum": 1,
-            "format": "int64"
-          }
-        ],
         "responses": {
           "400": {
             "description": "Invalid ID supplied"
@@ -350,26 +297,6 @@
         "produces": [
           "application/xml",
           "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "collectionId",
-            "description": "ID of the collection being commented on",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ResourceForPut"
-            }
-          },
-          {
-            "in": "body",
-            "name": "comment",
-            "description": "The comment to add to the collection",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ResourceForPut"
-            }
-          }
         ],
         "responses": {
           "405": {
@@ -398,18 +325,7 @@
           "application/xml",
           "application/json"
         ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "resource",
-            "description": "Resource that needs to be updated",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ResourceForPut"
-            }
-          }
-        ],
-        "responses": {
+       "responses": {
           "400": {
             "description": "Bad data supplied"
           },
@@ -417,7 +333,17 @@
             "description": "Resource updated successfully"
           }
         }
-      }
+      },
+      "parameters": [
+        {
+          "name": "collectionId",
+          "in": "path",
+          "description": "ID of collection to return",
+          "required": true,
+          "type": "integer",
+          "format": "int64"
+        }
+      ]
     } 
   },
   "securityDefinitions": {
