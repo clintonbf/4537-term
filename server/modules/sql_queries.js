@@ -198,6 +198,68 @@ function getResourceComments(resourceId) {
     ];
 }
 
+function getStatIncrement(method, endpoint) {
+    const id = getStatId(endpoint, method);
+
+    return [
+        `UPDATE stats
+        SET hits = hits + 1
+        WHERE id = ${id};`
+    ];
+}
+
+function getStatId(endpoint, method) {
+    const POST      = 'POST';
+    const GET       = 'GET';
+    const PUT       = 'PUT';
+    const DELETE    = 'DELETE';
+    
+    const PLAIN_RESOURCE    = '/resources';
+    const PLAIN_COLLECTION  = '/collections';
+    const RESOURCE_ID       = PLAIN_RESOURCE + '/{resourceId}';
+    const COLLECTIONS_ID    = PLAIN_COLLECTION + '/collectionId}'
+
+    if (method === POST && endpoint === PLAIN_RESOURCE) {
+        return 1;
+    }
+
+    if (method === PUT && endpoint === PLAIN_RESOURCE) {
+        return 2;
+    }
+
+    if (method === GET && endpoint === RESOURCE_ID) {
+        return 3;
+    }
+
+    if (method === DELETE && endpoint === RESOURCE_ID) {
+        return 4;
+    }
+
+    if (method === POST && endpoint === RESOURCE_ID) {
+        return 5;
+    }
+
+    if (method === POST && endpoint === PLAIN_COLLECTION) {
+        return 6;
+    }
+
+    if (method === GET && endpoint === COLLECTIONS_ID) {
+        return 7;
+    }
+
+    if (method === DELETE && endpoint === COLLECTIONS_ID) {
+        return 8;
+    }
+
+    if (method === POST && endpoint === COLLECTIONS_ID) {
+        return 9;
+    }
+
+    if (method === PUT && endpoint === COLLECTIONS_ID) {
+        return 10;
+    }
+}
+
 module.exports = {
     getResource,
     getCollection,
@@ -208,5 +270,6 @@ module.exports = {
     addResourcesToCollection,
     putCollection,
     getRandomResouce,
-    getResourceComments
+    getResourceComments,
+    getStatIncrement
 };
