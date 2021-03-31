@@ -13,4 +13,7 @@ exports.COLLECTION_POST_405 = "Unable to add collection.";
 exports.COLLECTION_PUT_204 = 'Collection updated.';
 exports.COLLECTION_PUT_400 = 'Unable to update collection.';
 
+exports.UNAUTHORIZED = 'Unauthorized access';
+exports.INVALID_TOKEN = 'Invalid token. Access denied';
+
 exports.ALL_BAD_DATA_4xx = 'Bad data supplied';

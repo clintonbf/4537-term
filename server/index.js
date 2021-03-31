@@ -1,19 +1,24 @@
+require('dotenv').config();
+
 //Imports
-const express = require('express');
-const bodyParser = require('body-parser');
-const credentials = require('./modules/db_credentials');
-const queries = require('./modules/sql_queries');
-const validation = require('./modules/validation');
-const outcomes = require('./modules/http_messages');
+const express       = require('express');
+const bodyParser    = require('body-parser');
+const jwt           = require('jsonwebtoken');
+
+const credentials   = require('./modules/db_credentials');
+const queries       = require('./modules/sql_queries');
+const validation    = require('./modules/validation');
+const outcomes      = require('./modules/http_messages');
 
 // HTTP method definitions
-const GET = 'GET';
-const POST = 'POST';
-const PUT = 'PUT';
-const DELETE = 'DELETE;'
-const OPTIONS = 'OPTIONS';
+const GET       = 'GET';
+const POST      = 'POST';
+const PUT       = 'PUT';
+const DELETE    = 'DELETE;'
+const OPTIONS   = 'OPTIONS';
 
 const ENDPOINT_ROOT = '/API/v1';
+const DOMAIN = 'clintonfernandes.ca';
 
 const USE_DEV_DB = true;
 
@@ -26,13 +31,24 @@ app.use((req, res, next) => {
 
     next();
 });
-
+app.use(express.json());
 app.use(bodyParser());
 
 // ********* ROUTES
 
+// ******************* AUTH
+app.post('/login', (req, res) => {
+    //authenticate
+
+    const details = {domain : DOMAIN};  //This needs adaptation for our purpose
+
+    const accessToken = jwt.sign(details, process.env.ACCESS_SECRET_TOKEN);
+
+    res.json( {accessToken: accessToken} );
+});
+
 // ******************* resources
-app.post(`${ENDPOINT_ROOT}/resources`, (req, res) => {
+app.post(`${ENDPOINT_ROOT}/resources`, authenticateToken, (req, res) => {
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
 
     const querySet = queries.postResource(req.body);
@@ -58,7 +74,7 @@ app.post(`${ENDPOINT_ROOT}/resources`, (req, res) => {
     });
 });
 
-app.delete(`${ENDPOINT_ROOT}/resources/:id`, (req, res) => {
+app.delete(`${ENDPOINT_ROOT}/resources/:id`, authenticateToken, (req, res) => {
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
 
     const id = req.params.id;
@@ -96,7 +112,7 @@ app.delete(`${ENDPOINT_ROOT}/resources/:id`, (req, res) => {
 
 
 // ******************* collection
-app.get(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
+app.get(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
 
     if (!validation.validateId(parseInt(req.params.id))) {
@@ -127,7 +143,7 @@ app.get(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
     })
 });
 
-app.post(`${ENDPOINT_ROOT}/collections`, (req, res) => {
+app.post(`${ENDPOINT_ROOT}/collections`, authenticateToken, (req, res) => {
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
 
     const collectionObj = req.body.collection;
@@ -167,7 +183,7 @@ app.post(`${ENDPOINT_ROOT}/collections`, (req, res) => {
     });
 });
 
-app.put(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
+app.put(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
 
     const id = req.params.id;
@@ -199,5 +215,26 @@ app.put(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
         res.status(400).end(outcomes.COLLECTION_PUT_400);
     });
 });
+
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (token === null) {
+        return res.status(401).send(outcomes.UNAUTHORIZED);
+    }
+
+    jwt.verify(token, process.env.ACCESS_SECRET_TOKEN, (err, details) => {
+        if (err) {
+            return res.status(403).send(outcomes.INVALID_TOKEN);
+        }
+
+        if (details.domain !== DOMAIN) {
+            return res.status(401).send(outcomes.UNAUTHORIZED);
+        }
+    
+        next();
+    });
+}
 
 app.listen(3000);
