@@ -103,4 +103,7 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Other
 server/modules/db_credentials.js
+.env
