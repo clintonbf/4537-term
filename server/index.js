@@ -1,3 +1,5 @@
+const USE_DEV_DB = true;
+
 require('dotenv').config();
 
 //Imports
@@ -18,9 +20,7 @@ const DELETE    = 'DELETE;'
 const OPTIONS   = 'OPTIONS';
 
 const ENDPOINT_ROOT = '/API/v1';
-const DOMAIN = 'clintonfernandes.ca';
-
-const USE_DEV_DB = true;
+const DOMAIN        = 'clintonfernandes.ca';
 
 const app = express();
 
@@ -38,9 +38,9 @@ app.use(bodyParser());
 
 // ******************* AUTH
 app.post('/login', (req, res) => {
-    //authenticate
+    //TODO authenticate 
 
-    const details = {domain : DOMAIN};  //This needs adaptation for our purpose
+    const details = {domain : DOMAIN}; 
 
     const accessToken = jwt.sign(details, process.env.ACCESS_SECRET_TOKEN);
 
