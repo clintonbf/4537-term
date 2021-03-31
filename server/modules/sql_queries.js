@@ -1,3 +1,8 @@
+const PLAIN_RESOURCE    = '/resources';
+const PLAIN_COLLECTION  = '/collections';
+const RESOURCE_ID       = PLAIN_RESOURCE + '/{resourceId}';
+const COLLECTIONS_ID    = PLAIN_COLLECTION + '/{collectionId}'
+
 /**
  * SQL DB queries stored here
  */
@@ -200,7 +205,7 @@ function getResourceComments(resourceId) {
 
 function getStatIncrement(method, endpoint) {
     const id = getStatId(endpoint, method);
-
+    
     return [
         `UPDATE stats
         SET hits = hits + 1
@@ -214,11 +219,6 @@ function getStatId(endpoint, method) {
     const PUT       = 'PUT';
     const DELETE    = 'DELETE';
     
-    const PLAIN_RESOURCE    = '/resources';
-    const PLAIN_COLLECTION  = '/collections';
-    const RESOURCE_ID       = PLAIN_RESOURCE + '/{resourceId}';
-    const COLLECTIONS_ID    = PLAIN_COLLECTION + '/collectionId}'
-
     if (method === POST && endpoint === PLAIN_RESOURCE) {
         return 1;
     }
@@ -271,5 +271,9 @@ module.exports = {
     putCollection,
     getRandomResouce,
     getResourceComments,
-    getStatIncrement
+    getStatIncrement,
+    PLAIN_RESOURCE,
+    PLAIN_COLLECTION,
+    RESOURCE_ID,
+    COLLECTIONS_ID
 };
