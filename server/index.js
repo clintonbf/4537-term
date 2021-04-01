@@ -69,6 +69,8 @@ app.post(`${ENDPOINT_ROOT}/resources`, authenticateToken, (req, res) => {
     p.then((newInsertId) => {
         res.type('application/json');
         res.json({ inserted_id: newInsertId });
+    }).then( () => {
+        updateStats(dbConnection, POST, queries.PLAIN_RESOURCE);
     }).catch(err => {
         res.status(405).end(outcomes.RESOURCE_POST_405);
     });
@@ -104,8 +106,9 @@ app.delete(`${ENDPOINT_ROOT}/resources/:id`, authenticateToken, (req, res) => {
         res.type('application/json');
         res.json({ outcome: outcomes.RESOURCE_DELETE_201 });
         res.end();
-    }).
-        catch(err => {
+    }).then( () => {
+        updateStats(dbConnection, DELETE, queries.RESOURCE_ID);
+    }).catch(err => {
             res.status(400).end(outcomes.RESOURCE_DELETE_400);
         });
 });
@@ -219,6 +222,8 @@ app.get(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
         res.type('application/json');
         res.send(data);
         res.end();
+    }).then( () => {
+        updateStats(dbConnection, GET, queries.COLLECTIONS_ID);
     }).catch(err => {
         console.log(`Error: ${err}`);
         res.status(400).end(outcomes.COLLECTION_GET_400);
@@ -259,7 +264,8 @@ app.post(`${ENDPOINT_ROOT}/collections`, authenticateToken, (req, res) => {
     }).then(() => {
         res.type('application/json');
         res.json({ inserted_id: newCollectionId });
-
+    }).then( () => {
+        updateStats(dbConnection, POST, queries.PLAIN_COLLECTION);
     }).catch((err) => {
         res.status(405).end(outcomes.COLLECTION_POST_405);
     });
@@ -293,6 +299,8 @@ app.put(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
     p.then((affectedRows) => {
         res.type('application/json');
         res.json({ records_updated: affectedRows });
+    }).then( () => {
+        updateStats(dbConnection, PUT, queries.COLLECTIONS_ID);
     }).catch((err) => {
         res.status(400).end(outcomes.COLLECTION_PUT_400);
     });
@@ -388,5 +396,20 @@ function authenticateToken(req, res, next) {
     });
 }
 
+function updateStats(dbConnection, method, endpoint) {
+    let p = new Promise( (resolve, reject) => {
+        const querySet = queries.getStatIncrement(method, endpoint);
+
+        dbConnection.query(querySet[0], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        });
+    });
+
+    return p;
+}
+
 app.listen(3000);
-console.log("listening...");   
