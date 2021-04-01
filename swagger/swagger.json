@@ -13,8 +13,8 @@
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
-  "host": "petstore.swagger.io",
-  "basePath": "/v1",
+  "host": "clintonfernandes.ca",
+  "basePath": "/termproject/API/v1",
   "tags": [
     {
       "name": "resources",
