@@ -10,6 +10,12 @@ INSERT INTO collections
 VALUES
 ('PThreads', 'pthreads from Jacob Sorber', 'videos');
 
+INSERT INTO collections
+(title, description, theme)
+VALUES
+('Delete MeEeEe', 'I am but a wee collection, ready to be deleted from the DB', 'videos');
+
+
 INSERT INTO collection_resources
 (resource_id, collection_id)
 VALUES

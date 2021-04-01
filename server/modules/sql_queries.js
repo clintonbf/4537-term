@@ -224,15 +224,15 @@ function putCollection(collectionObject) {
 function deleteCollection(collectionId) {
     let statements = []; 
 
-    let statementOne = `DELETE FROM collection_comments WHERE collection_id = ${collectionId};`; 
-    let statementTwo = `DELETE FROM collection_resource WHERE collection_id = ${collectionId};`; 
-    let statementThree = `DELETE FROM collections WHERE id = ${collectionId}; `; 
+    let statementOne = `DELETE FROM collection_comments WHERE collection_id = ${collectionId};` 
+    let statementTwo = `DELETE FROM collection_resource WHERE collection_id = ${collectionId};` 
+    let statementThree = `DELETE FROM collections WHERE id = ${collectionId};`
     
     statements.push(statementOne);
     statements.push(statementTwo);
     statements.push(statementThree);
 
-    return [statement]; 
+    return statements; 
 }
 
 
@@ -243,7 +243,7 @@ function deleteCollection(collectionId) {
  * @param {Object} dataObject information for new collection comment
  * @returns {Object} array of statements 
  */
-function postCollectionComment(collectionId,dataObject) {
+function postCollectionComment(collectionId, dataObject) {
 
     let comment = dataObject.comment; 
 
@@ -276,9 +276,10 @@ module.exports = {
     deleteResource,
     postResource,
     putResource, 
+    postResourceComment, 
+    addResourcesToCollection,
     postCollectionPartOne,
     postCollectionPartTwo,
-    addResourcesToCollection,
     putCollection,
     deleteCollection, 
     postCollectionComment, 

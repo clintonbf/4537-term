@@ -299,11 +299,15 @@ app.put(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
 });
 
 
-// todo Validate
+// todo add auth
 app.delete(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
+    console.log("Delete"); 
+    
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
     const id = req.params.id;
-    const querySet = queries.deleteCollection(id);
+    console.log(id); 
+    const querySet = queries.deleteCollection(id); 
+    console.log(querySet[0]); 
 
     let p = new Promise((resolve, reject) => {
         console.log(`Query 1: ${querySet[0]}`);
