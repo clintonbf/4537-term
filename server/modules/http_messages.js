@@ -13,6 +13,12 @@ exports.COLLECTION_POST_405 = "Unable to add collection.";
 exports.COLLECTION_PUT_204 = 'Collection updated.';
 exports.COLLECTION_PUT_400 = 'Unable to update collection.';
 
+exports.COLLECTION_DELETE_201 = 'Collection deleted'; 
+exports.COLLECTION_DELETE_400 = 'Unable to delete collection'; 
+
+exports.COMMENT_POST_201 = 'Comment added'; 
+exports.COMMENT_POST_400 = 'Unable to add comment';
+
 exports.UNAUTHORIZED = 'Unauthorized access';
 exports.INVALID_TOKEN = 'Invalid token. Access denied';
 

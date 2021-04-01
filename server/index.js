@@ -110,6 +110,88 @@ app.delete(`${ENDPOINT_ROOT}/resources/:id`, authenticateToken, (req, res) => {
         });
 });
 
+app.put(`${ENDPOINT_ROOT}/resources`, (req, res) =>{
+    const dbConnection = credentials.getDbConnection(USE_DEV_DB);  
+    
+    const querySet = queries.putResource(req.body); 
+    const dataObject = req.body;
+    const p = new Promise((resolve, reject) => {
+        dbConnection.query(querySet[0], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+
+    p.then(data => {
+        res.type('application/json');
+        res.send(data);
+        res.end();
+    }).catch(err => {
+        console.log(`Error: ${err}`);
+        res.status(400).end(outcomes.RESOURCE_PUT_400);
+    })
+})
+
+
+// todo validate
+app.get(`${ENDPOINT_ROOT}/resources/:id`, (req, res) => {
+    const dbConnection = credentials.getDbConnection(USE_DEV_DB);  
+
+    const querySet = queries.getResource(req.params.id); 
+
+    const p = new Promise((resolve, reject) => {
+        dbConnection.query(querySet[0], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+
+    p.then(data => {
+        res.type('application/json');
+        res.send(data);
+        res.end();
+    }).catch(err => {
+        console.log(`Error: ${err}`);
+        res.status(400).end(outcomes.COLLECTION_GET_400);
+    })
+
+});
+
+// todo add auth
+app.post(`${ENDPOINT_ROOT}/resource/:id`, (req, res) => {
+    const dbConnection = credentials.getDbConnection(USE_DEV_DB);
+
+    const id = req.params.id;
+
+    const querySet = queries.postResourceComment(id, req.body);
+
+    console.log(`Query: ${querySet[0]}`);
+
+    let p = new Promise((resolve, reject) => {
+        dbConnection.query(querySet[0], (err, result) => {
+            if (err) {
+                console.error(err);
+                reject(err);
+            } else {
+                resolve(result.affectedRows);
+            }
+        });
+    });
+
+    p.then((affectedRows) => {
+        res.type('application/json');
+        res.json({ records_updated: affectedRows });
+    }).catch((err) => {
+        res.status(400).end(outcomes.COMMENT_POST_400);
+    });
+})
+
 
 // ******************* collection
 app.get(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
@@ -216,6 +298,71 @@ app.put(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
     });
 });
 
+
+// todo Validate
+app.delete(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
+    const dbConnection = credentials.getDbConnection(USE_DEV_DB);
+    const id = req.params.id;
+    const querySet = queries.deleteCollection(id);
+
+    let p = new Promise((resolve, reject) => {
+        console.log(`Query 1: ${querySet[0]}`);
+        dbConnection.query(querySet[0], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(id);
+            }
+        });
+    });
+
+    p.then((id) => {
+        console.log(`Query 2: ${querySet[1]}`);
+
+        dbConnection.query(querySet[1]);
+    }).then((id) => {
+        console.log(`Query 3: ${querySet[2]}`);
+
+        dbConnection.query(querySet[2]);
+    }).then((id) => {
+        res.type('application/json');
+        res.json({ outcome: outcomes.COLLECTION_DELETE_201 });
+        res.end();
+    }).
+        catch(err => {
+            res.status(400).end(outcomes.COLLECTION_DELETE_400);
+        });
+}); 
+
+
+// todo add auth
+app.post(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
+    const dbConnection = credentials.getDbConnection(USE_DEV_DB);
+    const id = req.params.id;
+
+    const querySet = queries.postCollectionComment(id, req.body);
+
+    console.log(`Query: ${querySet[0]}`);
+
+    let p = new Promise((resolve, reject) => {
+        dbConnection.query(querySet[0], (err, result) => {
+            if (err) {
+                console.error(err);
+                reject(err);
+            } else {
+                resolve(result.affectedRows);
+            }
+        });
+    });
+
+    p.then((affectedRows) => {
+        res.type('application/json');
+        res.json({ records_updated: affectedRows });
+    }).catch((err) => {
+        res.status(400).end(outcomes.COMMENT_POST_400);
+    });
+})
+
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -238,3 +385,4 @@ function authenticateToken(req, res, next) {
 }
 
 app.listen(3000);
+console.log("listening...");   

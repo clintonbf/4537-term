@@ -23,6 +23,12 @@ VALUES
 (1, "I'd like a banana"),
 (4, "CASH MONEY!");
 
+INSERT INTO collection_comments
+(collection_id, comment)
+VALUES
+(1, "Fab Collection"), 
+(1, "Jet fuel can't melt steel beams >:( ");  
+
 INSERT INTO stats
 (method, endpoint, hits)
 VALUES
