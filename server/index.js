@@ -12,7 +12,7 @@ const credentials   = require('./modules/db_credentials');
 const queries       = require('./modules/sql_queries');
 const validation    = require('./modules/validation');
 const outcomes      = require('./modules/http_messages');
-const { response } = require('express');
+const { response }  = require('express');
 
 // HTTP method definitions
 const GET       = 'GET';
@@ -230,7 +230,6 @@ app.put(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
 });
 
 app.get(`${ENDPOINT_ROOT}/admin/stats`, authenticateToken, (req, res) => {
-    console.log("Endpoint hit");
     const query = `SELECT * FROM stats ORDER BY id;`;
 
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
