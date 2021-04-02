@@ -1,5 +1,9 @@
-async function getStats() {
-    const URL = 'http:\\localhost:3000/API/v1/admin/stats';
+async function getStats() {    
+    const endpoint = '/COMP4537/termproject/API/v1/admin/stats'
+    const devURL = `http://localhost:3000/${endpoint}`;
+    const prodURL = `https://clintonfernandes.ca/${endpoint}`
+
+    const URL = prodURL;
 
     const headers = new Headers();
     headers.append('Content-Type', 'text/json');
