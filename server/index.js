@@ -31,7 +31,7 @@ app.use((req, res, next) => {
     // res.header('ACCESS-CONTROL-ALLOW-ORIGIN', '*');
     res.header('ACCESS-CONTROL-ALLOW-METHODS', `${GET, PUT, POST, DELETE, OPTIONS}`);
     res.header('ACCESS-CONTROL-ALLOW-HEADER', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-
+   
     next();
 });
 app.use(express.json());
@@ -118,7 +118,7 @@ app.delete(`${ENDPOINT_ROOT}/resources/:id`, authenticateToken, (req, res) => {
         });
 });
 
-app.put(`${ENDPOINT_ROOT}/resources`, (req, res) =>{
+app.put(`${ENDPOINT_ROOT}/resources`,  authenticateToken, (req, res) =>{
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);  
     
     const querySet = queries.putResource(req.body); 
@@ -137,6 +137,8 @@ app.put(`${ENDPOINT_ROOT}/resources`, (req, res) =>{
         res.type('application/json');
         res.send(data);
         res.end();
+    }).then( () => {
+        updateStats(dbConnection, DELETE, queries.RESOURCE_ID);
     }).catch(err => {
         console.log(`Error: ${err}`);
         res.status(400).end(outcomes.RESOURCE_PUT_400);
@@ -144,8 +146,7 @@ app.put(`${ENDPOINT_ROOT}/resources`, (req, res) =>{
 })
 
 
-// todo validate
-app.get(`${ENDPOINT_ROOT}/resources/:id`, (req, res) => {
+app.get(`${ENDPOINT_ROOT}/resources/:id`,  authenticateToken, (req, res) => {
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);  
 
     const querySet = queries.getResource(req.params.id); 
@@ -164,6 +165,8 @@ app.get(`${ENDPOINT_ROOT}/resources/:id`, (req, res) => {
         res.type('application/json');
         res.send(data);
         res.end();
+    }).then( () => {
+        updateStats(dbConnection, DELETE, queries.RESOURCE_ID);
     }).catch(err => {
         console.log(`Error: ${err}`);
         res.status(400).end(outcomes.COLLECTION_GET_400);
@@ -171,8 +174,7 @@ app.get(`${ENDPOINT_ROOT}/resources/:id`, (req, res) => {
 
 });
 
-// todo add auth
-app.post(`${ENDPOINT_ROOT}/resource/:id`, (req, res) => {
+app.post(`${ENDPOINT_ROOT}/resource/:id`,  authenticateToken, (req, res) => {
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
 
     const id = req.params.id;
@@ -195,6 +197,8 @@ app.post(`${ENDPOINT_ROOT}/resource/:id`, (req, res) => {
     p.then((affectedRows) => {
         res.type('application/json');
         res.json({ records_updated: affectedRows });
+    }).then( () => {
+        updateStats(dbConnection, DELETE, queries.RESOURCE_ID);
     }).catch((err) => {
         res.status(400).end(outcomes.COMMENT_POST_400);
     });
@@ -329,6 +333,8 @@ app.get(`${ENDPOINT_ROOT}/admin/stats`, authenticateToken, (req, res) => {
     p.then( (result) => {
         res.type(RESPONSE_TYPE);
         res.json(result);
+    }).then( () => {
+        updateStats(dbConnection, DELETE, queries.RESOURCE_ID);
     }).catch( err => {
         console.error(err);
         res.status(500).end("Unknown error");
@@ -336,8 +342,7 @@ app.get(`${ENDPOINT_ROOT}/admin/stats`, authenticateToken, (req, res) => {
 
 });
 
-// todo add auth
-app.delete(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
+app.delete(`${ENDPOINT_ROOT}/collections/:id`,  authenticateToken, (req, res) => {
     console.log("Delete"); 
     
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
@@ -376,8 +381,7 @@ app.delete(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
 }); 
 
 
-// todo add auth
-app.post(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
+app.post(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
     const id = req.params.id;
 
@@ -399,6 +403,8 @@ app.post(`${ENDPOINT_ROOT}/collections/:id`, (req, res) => {
     p.then((affectedRows) => {
         res.type('application/json');
         res.json({ records_updated: affectedRows });
+    }).then( () => {
+        updateStats(dbConnection, DELETE, queries.RESOURCE_ID);
     }).catch((err) => {
         res.status(400).end(outcomes.COMMENT_POST_400);
     });
