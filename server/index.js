@@ -5,12 +5,14 @@ require('dotenv').config();
 //Imports
 const express       = require('express');
 const bodyParser    = require('body-parser');
+const cors          = require('cors');
 const jwt           = require('jsonwebtoken');
 
 const credentials   = require('./modules/db_credentials');
 const queries       = require('./modules/sql_queries');
 const validation    = require('./modules/validation');
 const outcomes      = require('./modules/http_messages');
+const { response }  = require('express');
 
 // HTTP method definitions
 const GET       = 'GET';
@@ -19,13 +21,14 @@ const PUT       = 'PUT';
 const DELETE    = 'DELETE;'
 const OPTIONS   = 'OPTIONS';
 
-const ENDPOINT_ROOT = '/API/v1';
+const ENDPOINT_ROOT = '/COMP4537/termproject/API/v1';
 const DOMAIN        = 'clintonfernandes.ca';
+const RESPONSE_TYPE = 'application/json';
 
 const app = express();
 
 app.use((req, res, next) => {
-    res.header('ACCESS-CONTROL-ALLOW-ORIGIN', '*');
+    // res.header('ACCESS-CONTROL-ALLOW-ORIGIN', '*');
     res.header('ACCESS-CONTROL-ALLOW-METHODS', `${GET, PUT, POST, DELETE, OPTIONS}`);
     res.header('ACCESS-CONTROL-ALLOW-HEADER', 'Content-Type, Authorization, Content-Length, X-Requested-With');
    
@@ -33,6 +36,8 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 app.use(bodyParser());
+app.use(cors());
+app.options('*', cors());
 
 // ********* ROUTES
 
@@ -304,6 +309,30 @@ app.put(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
     });
 });
 
+app.get(`${ENDPOINT_ROOT}/admin/stats`, authenticateToken, (req, res) => {
+    const query = `SELECT * FROM stats ORDER BY id;`;
+
+    const dbConnection = credentials.getDbConnection(USE_DEV_DB);
+
+    let p = new Promise( (resolve, reject) => {
+        dbConnection.query(query, (err, result) => {
+            if (err) {
+            reject(err);
+        } else {
+            resolve(result);
+        }
+        });
+    });
+
+    p.then( (result) => {
+        res.type(RESPONSE_TYPE);
+        res.json(result);
+    }).catch( err => {
+        console.error(err);
+        res.status(500).end("Unknown error");
+    });
+
+});
 
 app.delete(`${ENDPOINT_ROOT}/collections/:id`,  authenticateToken, (req, res) => {
     console.log("Delete"); 
