@@ -21,7 +21,7 @@ const PUT       = 'PUT';
 const DELETE    = 'DELETE;'
 const OPTIONS   = 'OPTIONS';
 
-const ENDPOINT_ROOT = '/API/v1';
+const ENDPOINT_ROOT = '/COMP4537/termproject/API/v1';
 const DOMAIN        = 'clintonfernandes.ca';
 const RESPONSE_TYPE = 'application/json';
 
