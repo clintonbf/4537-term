@@ -10,6 +10,12 @@ INSERT INTO collections
 VALUES
 ('PThreads', 'pthreads from Jacob Sorber', 'videos');
 
+INSERT INTO collections
+(title, description, theme)
+VALUES
+('Delete MeEeEe', 'I am but a wee collection, ready to be deleted from the DB', 'videos');
+
+
 INSERT INTO collection_resources
 (resource_id, collection_id)
 VALUES
@@ -22,6 +28,12 @@ VALUES
 (1, "What a great video"),
 (1, "I'd like a banana"),
 (4, "CASH MONEY!");
+
+INSERT INTO collection_comments
+(collection_id, comment)
+VALUES
+(1, "Fab Collection"), 
+(1, "Jet fuel can't melt steel beams >:( ");  
 
 INSERT INTO stats
 (method, endpoint, hits)

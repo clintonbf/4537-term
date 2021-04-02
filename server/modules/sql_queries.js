@@ -90,6 +90,42 @@ function postResource(resourceObject) {
 }
 
 /**
+ * Gets the SQL statement needed to add comment to a resource.
+ * 
+ * @param {Number} resourceId id of a resource in the DB
+ * @param {Object} dataObject information for new resource comment
+ * @returns {Object} array of statements 
+ */
+ function postResourceComment(resourceId, dataObject) {
+
+    let comment = dataObject.comment; 
+
+    let statement = `INSERT INTO resource_comments(resource_id, comment) VALUES (${resourceId}, '${comment}');`; 
+
+    return[statement];
+} 
+
+
+/**
+ * Gets SQL statement needed to insert a resource into DB.
+ * 
+ * @param {Object} resourceObject data to insert
+ * @returns  {Object} array of statements to execute in series
+ */
+function putResource(resourceObject) {
+    let statement = `UPDATE resource SET `;
+
+    if (resourceObject.name) {
+        statement += `name = '${resourceObject.name}' `;
+    }
+    if (resourceObject.url) {
+        statement += `url = '${resourceObject.url}'`;
+    }
+    statement += ` WHERE id = '${resourceObject.id}';`
+    return [statement]; 
+}
+
+/**
  * Gets the SQL statement needed to add a collection.
  * 
  * This statement should be run in conjunction with that in postCollectionPartTwo() (if there are resources to add immediately)
@@ -184,6 +220,42 @@ function putCollection(collectionObject) {
     return [statement];
 }
 
+/**
+ * Gets SQL query to delete a collection.
+ * 
+ * @param {Object} collectionId 
+ * @returns {Object} array of statements to execute in series
+ */
+function deleteCollection(collectionId) {
+    let statements = []; 
+
+    let statementOne = `DELETE FROM collection_comments WHERE collection_id = ${collectionId};` 
+    let statementTwo = `DELETE FROM collection_resource WHERE collection_id = ${collectionId};` 
+    let statementThree = `DELETE FROM collections WHERE id = ${collectionId};`
+    
+    statements.push(statementOne);
+    statements.push(statementTwo);
+    statements.push(statementThree);
+
+    return statements; 
+}
+
+
+/**
+ * Gets the SQL statement needed to add a comment to a collection. 
+ * 
+ * @param {Number} collectionId DB id of the collection
+ * @param {Object} dataObject information for new collection comment
+ * @returns {Object} array of statements 
+ */
+function postCollectionComment(collectionId, dataObject) {
+
+    let comment = dataObject.comment; 
+
+    let statement = `INSERT INTO collection_comments(collection_id, comment) VALUES (${collectionId}, '${comment}');`; 
+
+    return[statement];
+} 
 
 function getRandomResouce() {
     // This don't work
@@ -265,10 +337,14 @@ module.exports = {
     getCollection,
     deleteResource,
     postResource,
+    putResource, 
+    postResourceComment, 
+    addResourcesToCollection,
     postCollectionPartOne,
     postCollectionPartTwo,
-    addResourcesToCollection,
     putCollection,
+    deleteCollection, 
+    postCollectionComment, 
     getRandomResouce,
     getResourceComments,
     getStatIncrement,
