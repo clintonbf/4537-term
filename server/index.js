@@ -137,6 +137,8 @@ app.put(`${ENDPOINT_ROOT}/resources`,  authenticateToken, (req, res) =>{
         res.type('application/json');
         res.send(data);
         res.end();
+    }).then( () => {
+        updateStats(dbConnection, DELETE, queries.RESOURCE_ID);
     }).catch(err => {
         console.log(`Error: ${err}`);
         res.status(400).end(outcomes.RESOURCE_PUT_400);
@@ -163,6 +165,8 @@ app.get(`${ENDPOINT_ROOT}/resources/:id`,  authenticateToken, (req, res) => {
         res.type('application/json');
         res.send(data);
         res.end();
+    }).then( () => {
+        updateStats(dbConnection, DELETE, queries.RESOURCE_ID);
     }).catch(err => {
         console.log(`Error: ${err}`);
         res.status(400).end(outcomes.COLLECTION_GET_400);
@@ -193,6 +197,8 @@ app.post(`${ENDPOINT_ROOT}/resource/:id`,  authenticateToken, (req, res) => {
     p.then((affectedRows) => {
         res.type('application/json');
         res.json({ records_updated: affectedRows });
+    }).then( () => {
+        updateStats(dbConnection, DELETE, queries.RESOURCE_ID);
     }).catch((err) => {
         res.status(400).end(outcomes.COMMENT_POST_400);
     });
@@ -327,6 +333,8 @@ app.get(`${ENDPOINT_ROOT}/admin/stats`, authenticateToken, (req, res) => {
     p.then( (result) => {
         res.type(RESPONSE_TYPE);
         res.json(result);
+    }).then( () => {
+        updateStats(dbConnection, DELETE, queries.RESOURCE_ID);
     }).catch( err => {
         console.error(err);
         res.status(500).end("Unknown error");
@@ -395,6 +403,8 @@ app.post(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
     p.then((affectedRows) => {
         res.type('application/json');
         res.json({ records_updated: affectedRows });
+    }).then( () => {
+        updateStats(dbConnection, DELETE, queries.RESOURCE_ID);
     }).catch((err) => {
         res.status(400).end(outcomes.COMMENT_POST_400);
     });
