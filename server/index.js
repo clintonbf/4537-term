@@ -24,6 +24,7 @@ const OPTIONS   = 'OPTIONS';
 const ENDPOINT_ROOT = '/COMP4537/termproject/API/v1';
 const DOMAIN        = 'clintonfernandes.ca';
 const RESPONSE_TYPE = 'application/json';
+const CORS_DOMAIN   = 'https://emerald-k.ca'
 
 const app = express();
 
@@ -36,8 +37,8 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 app.use(bodyParser());
-app.use(cors());
-app.options('*', cors());
+app.use(cors({ origin: CORS_DOMAIN}));
+// app.options('*', cors());
 
 // ********* ROUTES
 
@@ -315,7 +316,7 @@ app.put(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
     });
 });
 
-app.get(`${ENDPOINT_ROOT}/admin/stats`, authenticateToken, (req, res) => {
+app.get(`${ENDPOINT_ROOT}/admin/stats`,  authenticateToken, (req, res) => {
     const query = `SELECT * FROM stats ORDER BY id;`;
 
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
