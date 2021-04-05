@@ -107,3 +107,5 @@ dist
 # Other
 server/modules/db_credentials.js
 .env
+
+about_project.docx
