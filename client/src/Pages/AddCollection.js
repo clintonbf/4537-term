@@ -13,7 +13,9 @@ const AddCollection = () => {
     
     const [resources, setResources] = useState(["ResourceName"]); 
     const [resourcesURL, setResourcesURL] = useState(["ResourceDesc"]); 
-    
+    const [resourceDesc, setResourceDesc] = useState(["Resource Descrition"]); 
+    const [resourceIDs, setResourceIDs] = useState([]); 
+
     const [rBox, setrBox] = useState([]); 
     
     const appendInput = (e) => {
@@ -23,44 +25,36 @@ const AddCollection = () => {
 
     const handleResourceTitleChange = (e) => {
         const newResource = resources.slice();  
-        console.log(e.target.id); 
         let parsedID = parseInt(e.target.id);  
-        newResource[parsedID] = e.target.value; 
-        console.log(newResource); 
+        newResource[parsedID] = e.target.value;
         setResources(newResource); 
     }
 
     const handleResourceURLChange = (e) => {
         const newResource = resourcesURL.slice();  
-        console.log(e.target.id); 
         let parsedID = parseInt(e.target.id);  
         newResource[parsedID] = e.target.value; 
-        console.log(newResource); 
         setResourcesURL(newResource); 
     }
 
-    const createCollection = (e) => {
+    const handleResourceDescriptionChange = (e) => {
+        const newResource = resourcesURL.slice();  
+        let parsedID = parseInt(e.target.id);  
+        newResource[parsedID] = e.target.value; 
+        setResourceDesc(newResource); 
+    }
 
-        // let collectionID = null; 
-        let resourceIDS = []; 
-        console.log("create collection"); 
-        
-        const newCResourceData = {rBox};  
-        
-        // resources 
+    const createCollection = (e) => { 
+      
         for(let i =0; i < rBox.length; i++) {
-            let newResource = {"url": resourcesURL[i], "type": "video", "title": resources[i]}; 
+            let newResource = {"url": resourcesURL[i], "type": "video", "title": resources[i], "description": resourceDesc[i]}; 
             let json = JSON.stringify(newResource); 
-
             axios.post(POST_RESOURCE(), json, {headers: {'Authorization': 'Bearer ' + authTokens, 'Content-Type': 'application/json'}
         }).then(result => {
             if(result.status === 200) {
-                console.log(result.data); 
-                console.log(JSON.stringify(result.data));
-                console.log(JSON.stringify(result.data.inserted_id));  
-                resourceIDS.push(parseInt(JSON.stringify(result.data.inserted_id))); 
-                console.log(resourceIDS); 
-                return result.data; 
+                const newId = resourceIDs.slice();
+                newId[resourceIDs.length] = result.data.inserted_id;  
+                setResourceIDs(newId); 
             } else {
                 console.log(result); 
             }
@@ -69,11 +63,10 @@ const AddCollection = () => {
         })
         }
         
-        console.log(resourceIDS); 
 
         const newCollectionData = {"collection": {
                 "title": title, "description": description, "theme": theme
-            }, "resources": resourceIDS
+            }, "resources": resourceIDs
         }
         let json = JSON.stringify(newCollectionData); 
 
@@ -106,7 +99,13 @@ const AddCollection = () => {
             
             </form>
                 <div>
-                    {rBox.map((rBox, i) => <div key={`${i}div`}> <p> New Resource</p> <input id={`${i}name`} key={`${i}name`} name="r_name" type="text" defaultValue="New Resources Name" onChange={handleResourceTitleChange}/> <input id={`${i}url`} key={`${i}url`} name="r_url" type="text" defaultValue="New Resource URL" onChange={handleResourceURLChange}/> </div> )};
+                    {rBox.map((rBox, i) => 
+                    <div key={`${i}div`}> 
+                    <p> New Resource</p> 
+                    <input id={`${i}name`} key={`${i}name`} name="r_name" type="text" defaultValue="New Resources Name" onChange={handleResourceTitleChange}/> 
+                    <input id={`${i}desc`} key={`${i}desc`} name="r_desc" type="text" defaultValue="New Resource Description" onChange={handleResourceDescriptionChange}/> 
+                    <input id={`${i}url`} key={`${i}url`} name="r_url" type="text" defaultValue="New Resource URL" onChange={handleResourceURLChange}/> 
+                    </div> )};
                 </div>
             <button onClick={appendInput}> Add Resource </button>
             <button onClick={createCollection}> Create Collection </button>

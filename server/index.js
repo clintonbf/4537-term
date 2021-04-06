@@ -346,6 +346,7 @@ app.get(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
     })
 });
 
+
 app.post(`${ENDPOINT_ROOT}/collections`, authenticateToken, (req, res) => {
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
 
@@ -365,16 +366,17 @@ app.post(`${ENDPOINT_ROOT}/collections`, authenticateToken, (req, res) => {
             if (err) {
                 reject(err);
             } else {
-                newCollectionId = result.insertId
+                newCollectionId = result.insertId;
+                console.log("New Collection ID: ", newCollectionId); 
                 resolve(newCollectionId);
             }
         });
     });
 
-    p.then(newId => {
+    p.then(newCollectionId => {
         const resourceIds = req.body.resources;
 
-        const querySetTwo = queries.postCollectionPartTwo(newId, resourceIds);
+        const querySetTwo = queries.postCollectionPartTwo(newCollectionId, resourceIds);
         console.log(`Second query: ${querySetTwo[0]}`);
         dbConnection.query(querySetTwo[0]);
     }).then(() => {
