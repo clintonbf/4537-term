@@ -45,7 +45,7 @@ export const Button = styled.button`
 
 background: ${({primary}) => (primary ? '#FFB800' : '#FFB800')}; 
 white-space: nowrap; 
-padding: ${({big}) => (big ? '24px 64px' : '24px 24px')}; 
+padding: ${({big}) => (big ? '24px 34px' : '14px 24px')}; 
 color: #003366; 
 font-size: ${({fontBig}) => (fontBig ? '20px' : '20px')}; 
 outline: None; 
@@ -59,7 +59,7 @@ cursor: PointerEvent;
     border: 2px solid #FFB800; 
     color: #FFB800; 
     @media screen and (max-width: 960px) {
-        width: 90%; 
+        width: 100%; 
     }
 }
 `;

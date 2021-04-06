@@ -1,5 +1,9 @@
 const URL = "http://localhost:3000/COMP4537/termproject/API/v1"; 
 
+const LOGIN = () => {
+    return "http://localhost:3000/login"; 
+}
+
 const POST_RESOURCE = () => {
     return `${URL}/resources`; 
 }; 
@@ -47,6 +51,7 @@ const GET_All_RESOURCE = (id) => {
 
 
 module.exports = {
+    LOGIN, 
     GET_RESOURCE, 
     POST_RESOURCE, 
     PUT_RESOURCE, 

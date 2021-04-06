@@ -1,11 +1,9 @@
 import React from 'react'
 import {Button, CenterContainer} from '../../GlobalStyle'; 
-import {InfoRow, Title, TitleRow} from './HomeContainter.elements'; 
+import {InfoRow, Title, TitleRow, LoginButton} from './HomeContainter.elements'; 
 import {Link} from 'react-router-dom';
 import { useAuth } from '../../context/auth';
 import axios from 'axios';
-
-
 
 
 const HomeContainer = () => {
@@ -34,8 +32,9 @@ const HomeContainer = () => {
                 BlockBuster 2.0
             </Title> 
         </TitleRow>
+       
         <CenterContainer>
-            <button onClick={postLogin}> Login </button>
+        <LoginButton onClick={postLogin}> Login </LoginButton>
             <InfoRow>
                 <Link to='/browseAllResources'>
                 <Button> Browse All </Button>

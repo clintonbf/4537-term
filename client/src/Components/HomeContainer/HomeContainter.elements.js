@@ -25,3 +25,18 @@ flex-wrap: wrap;
 justify-content: center; 
 `;
 
+export const InfoRowLeft = styled.div`
+display: flex; 
+margin: 0 15px 15px 15px;
+flex-wrap: wrap; 
+/* align-items: center;   */
+justify-content: left; 
+`;
+
+export const LoginButton = styled.button`
+    background: #003366; 
+    color: #FFB800; 
+    padding: 20px; 
+    border: 2px solid #FFB800;
+    border-radius: 35px; 
+`

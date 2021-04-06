@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'; 
-import {Button} from '../GlobalStyle'; 
+import {Button, CenterContainer} from '../GlobalStyle';
+import {InfoRowLeft, TitleRow, Title} from '../Components/HomeContainer/HomeContainter.elements'; 
 import axios from 'axios'; 
 import { useAuth } from '../context/auth';
 import {GET_All_RESOURCE, POST_RESOURCE} from '../API_calls'; 
@@ -61,19 +62,22 @@ const BrowseAll = () => {
 
     if(allResources) {
         content = 
-        <div>
+        <CenterContainer>
             {allResources.map((item, i) => (
-                 <div key={`${item.id}index`}> 
+                 <InfoRowLeft key={`${item.id}index`}> 
                      <Link to={{pathname: `/viewResource/${item.id}`}}> 
-                    <div key={`${item.title}_title`}> {item.title} </div> 
+                    <Button key={`${item.title}_title`}> {item.title} </Button> 
                     </Link> 
-                </div>
+                </InfoRowLeft>
             ))} 
-        </div>
+        </CenterContainer>
     }
 
     return (
         <div>
+            <TitleRow>
+                <Title> Resources </Title>
+            </TitleRow>
         {content}
      
         <div>
