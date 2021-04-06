@@ -20,6 +20,10 @@ const GET_RESOURCE_COMMENT = (id) => {
     return `${URL}/resourcescomments/${id}`; 
 }
 
+const GET_RANDOM_RESOURCE = (id) => {
+    return `${URL}/resourcesrandom`
+}
+
 const POST_RESOURCE_COMMENT = (id) => {
     return `${URL}/resources/${id}`; 
 }
@@ -52,5 +56,6 @@ module.exports = {
     GET_DELETE_COLLECTION, 
     GET_ALL_COLLECTION, 
     GET_All_RESOURCE, 
-    GET_RESOURCE_COMMENT
+    GET_RESOURCE_COMMENT, 
+    GET_RANDOM_RESOURCE
 }

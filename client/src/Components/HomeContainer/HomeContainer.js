@@ -47,7 +47,10 @@ const HomeContainer = () => {
                 </Link>
             </InfoRow>
             <InfoRow>
+                <Link to='/random'> 
                 <Button> Random Reccomendation </Button>
+                </Link>
+                
             </InfoRow>
         </CenterContainer>
         

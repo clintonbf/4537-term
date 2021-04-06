@@ -8,6 +8,7 @@ import BrowseCollection from './Pages/BrowseCollection';
 import BrowseAllCollections from './Pages/BrowseAllCollections'; 
 import AddCollection from './Pages/AddCollection'; 
 import ViewResource from './Pages/ViewResource';
+import Rando from './Pages/Rando'; 
 
 function App() {
   const [authoTokens, setauthoTokens] = useState(localStorage.getItem("tokens") || '')
@@ -41,6 +42,7 @@ function App() {
         <Route path='/browseCollection/:id' component={BrowseCollection} /> 
         <Route path='/addCollection' component={AddCollection} /> 
         
+        <Route path='/random' component={Rando} />
       </Switch>
     </Router>
     </AuthContext.Provider>

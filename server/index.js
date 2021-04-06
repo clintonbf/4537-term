@@ -146,6 +146,33 @@ app.put(`${ENDPOINT_ROOT}/resources`,  authenticateToken, (req, res) =>{
     })
 })
 
+// add STATS
+app.get(`${ENDPOINT_ROOT}/resourcesrandom`, authenticateToken, (req, res) => {
+    const dbConnection = credentials.getDbConnection(USE_DEV_DB);  
+
+    const querySet = queries.getRandomResouce();
+
+    const p = new Promise((resolve, reject) => {
+        dbConnection.query(querySet[0], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+
+    p.then(data => {
+        res.type('application/json');
+        res.send(data);
+        res.end();
+    }).catch(err => {
+        console.log(`Error: ${err}`);
+        res.status(400).end(outcomes.COLLECTION_GET_400);
+    })
+});
+
+
 app.get(`${ENDPOINT_ROOT}/resourcescomments/:id`, authenticateToken, (req, res) => {
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);  
 
