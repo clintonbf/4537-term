@@ -36,7 +36,6 @@ function App() {
         <Route path='/' exact component={HomePage}/>
         <Route path='/browseAllResources' component={BrowseAllResources} /> 
         <Route path='/viewResource/:id' component={ViewResource} />
-        {/* <Route path='/addResource' component={A} /> */}
         
         <Route path='/browseAllCollections' component={BrowseAllCollections} /> 
         <Route path='/browseCollection/:id' component={BrowseCollection} /> 
