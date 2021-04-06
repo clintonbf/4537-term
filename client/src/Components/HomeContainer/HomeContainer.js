@@ -37,13 +37,13 @@ const HomeContainer = () => {
         <CenterContainer>
             <button onClick={postLogin}> Login </button>
             <InfoRow>
-                <Link to='/browseAll'>
+                <Link to='/browseAllResources'>
                 <Button> Browse All </Button>
                 </Link>
             </InfoRow>
             <InfoRow>
-                <Link to='/browseCollections'>
-                     <Button> Browse By Category </Button>
+                <Link to='/browseAllCollections'>
+                     <Button> Browse By Collection </Button>
                 </Link>
             </InfoRow>
             <InfoRow>

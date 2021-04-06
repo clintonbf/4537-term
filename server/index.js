@@ -12,7 +12,7 @@ const credentials   = require('./modules/db_credentials');
 const queries       = require('./modules/sql_queries');
 const validation    = require('./modules/validation');
 const outcomes      = require('./modules/http_messages');
-const { response }  = require('express');
+const { response, query }  = require('express');
 
 // HTTP method definitions
 const GET       = 'GET';
@@ -24,21 +24,21 @@ const OPTIONS   = 'OPTIONS';
 const ENDPOINT_ROOT = '/COMP4537/termproject/API/v1';
 const DOMAIN        = 'clintonfernandes.ca';
 const RESPONSE_TYPE = 'application/json';
-const CORS_DOMAIN   = 'https://emerald-k.ca'
+// const CORS_DOMAIN   = 'https://emerald-k.ca'
 
 const app = express();
 
 app.use((req, res, next) => {
-    // res.header('ACCESS-CONTROL-ALLOW-ORIGIN', '*');
+    res.header('ACCESS-CONTROL-ALLOW-ORIGIN', '*');
     res.header('ACCESS-CONTROL-ALLOW-METHODS', `${GET, PUT, POST, DELETE, OPTIONS}`);
-    res.header('ACCESS-CONTROL-ALLOW-HEADER', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    res.header('ACCESS-CONTROL-ALLOW-HEADER', 'Origin, Content-Type, Authorization, Content-Length, X-Requested-With');
    
     next();
 });
 app.use(express.json());
 app.use(bodyParser());
-app.use(cors({ origin: CORS_DOMAIN}));
-// app.options('*', cors());
+// app.use(cors({ origin: CORS_DOMAIN}));
+app.options('*', cors());
 
 // ********* ROUTES
 
@@ -146,6 +146,32 @@ app.put(`${ENDPOINT_ROOT}/resources`,  authenticateToken, (req, res) =>{
     })
 })
 
+app.get(`${ENDPOINT_ROOT}/resourcescomments/:id`, authenticateToken, (req, res) => {
+    const dbConnection = credentials.getDbConnection(USE_DEV_DB);  
+
+    const querySet = queries.getResourceComments(req.params.id); 
+
+    const p = new Promise((resolve, reject) => {
+        dbConnection.query(querySet[0], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+
+    p.then(data => {
+        res.type('application/json');
+        res.send(data);
+        res.end();
+    }).catch(err => {
+        console.log(`Error: ${err}`);
+        res.status(400).end(outcomes.COLLECTION_GET_400);
+    })
+
+});
+
 
 app.get(`${ENDPOINT_ROOT}/resources/:id`,  authenticateToken, (req, res) => {
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);  
@@ -175,7 +201,7 @@ app.get(`${ENDPOINT_ROOT}/resources/:id`,  authenticateToken, (req, res) => {
 
 });
 
-app.post(`${ENDPOINT_ROOT}/resource/:id`,  authenticateToken, (req, res) => {
+app.post(`${ENDPOINT_ROOT}/resources/:id`,  authenticateToken, (req, res) => {
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
 
     const id = req.params.id;
@@ -199,14 +225,67 @@ app.post(`${ENDPOINT_ROOT}/resource/:id`,  authenticateToken, (req, res) => {
         res.type('application/json');
         res.json({ records_updated: affectedRows });
     }).then( () => {
-        updateStats(dbConnection, DELETE, queries.RESOURCE_ID);
+        updateStats(dbConnection, POST, queries.RESOURCE_ID);
     }).catch((err) => {
         res.status(400).end(outcomes.COMMENT_POST_400);
     });
 })
 
 
+app.get(`${ENDPOINT_ROOT}/resourcesAll`,  authenticateToken, (req, res) => {
+    const dbConnection = credentials.getDbConnection(USE_DEV_DB);  
+
+    const querySet = queries.getAllResources();  
+
+    const p = new Promise((resolve, reject) => {
+        dbConnection.query(querySet[0], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+
+    p.then(data => {
+        res.type('application/json');
+        res.send(data);
+        res.end();
+    }).catch(err => {
+        console.log(`Error: ${err}`);
+        res.status(400).end(outcomes.COLLECTION_GET_400);
+    })
+
+});
+
 // ******************* collection
+app.get(`${ENDPOINT_ROOT}/collectionsAll`, authenticateToken, (req, res) => {
+    const dbConnection = credentials.getDbConnection(USE_DEV_DB);
+
+    const querySet = queries.getAllCollections();
+    
+    const p = new Promise((resolve, reject) => {
+        dbConnection.query(querySet[0], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+
+    p.then(data => {
+        res.type('application/json');
+        res.send(data);
+        res.end();
+    }).catch(err => {
+        console.log(`Error: ${err}`);
+        res.status(400).end(outcomes.COLLECTION_GET_400);
+    })
+
+})
+
+
 app.get(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
 
