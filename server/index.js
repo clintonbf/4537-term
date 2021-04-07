@@ -334,8 +334,6 @@ app.get(`${ENDPOINT_ROOT}/admin/stats`,  authenticateToken, (req, res) => {
     p.then( (result) => {
         res.type(RESPONSE_TYPE);
         res.json(result);
-    }).then( () => {
-        updateStats(dbConnection, DELETE, queries.RESOURCE_ID);
     }).catch( err => {
         console.error(err);
         res.status(500).end("Unknown error");
@@ -375,12 +373,13 @@ app.delete(`${ENDPOINT_ROOT}/collections/:id`,  authenticateToken, (req, res) =>
         res.type('application/json');
         res.json({ outcome: outcomes.COLLECTION_DELETE_201 });
         res.end();
-    }).
-        catch(err => {
+    }).then( () => {
+        updateStats(dbConnection, DELETE, queries.RESOURCE_ID);
+    })
+    .catch(err => {
             res.status(400).end(outcomes.COLLECTION_DELETE_400);
         });
 }); 
-
 
 app.post(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
@@ -449,3 +448,5 @@ function updateStats(dbConnection, method, endpoint) {
 }
 
 app.listen(3000);
+
+
