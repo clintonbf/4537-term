@@ -30,6 +30,14 @@ DROP TABLE IF EXISTS collection_resources;
 DROP TABLE IF EXISTS resources;
 DROP TABLE IF EXISTS resource_comments;
 DROP TABLE IF EXISTS stats;
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE `users` ( 
+  `id` INT NOT NULL AUTO_INCREMENT , 
+  `username` VARCHAR(25) NOT NULL , 
+  `password` VARCHAR(255) NOT NULL , 
+  PRIMARY KEY (`id`)
+  ) ENGINE = MyISAM; 
 
 --
 -- Table structure for table `collections`
