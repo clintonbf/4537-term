@@ -316,31 +316,6 @@ app.put(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
     });
 });
 
-app.get(`${ENDPOINT_ROOT}/admin/stats`,  authenticateToken, (req, res) => {
-    const query = `SELECT * FROM stats ORDER BY id;`;
-
-    const dbConnection = credentials.getDbConnection(USE_DEV_DB);
-
-    let p = new Promise( (resolve, reject) => {
-        dbConnection.query(query, (err, result) => {
-            if (err) {
-            reject(err);
-        } else {
-            resolve(result);
-        }
-        });
-    });
-
-    p.then( (result) => {
-        res.type(RESPONSE_TYPE);
-        res.json(result);
-    }).catch( err => {
-        console.error(err);
-        res.status(500).end("Unknown error");
-    });
-
-});
-
 app.delete(`${ENDPOINT_ROOT}/collections/:id`,  authenticateToken, (req, res) => {
     console.log("Delete"); 
     
@@ -409,6 +384,31 @@ app.post(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
         res.status(400).end(outcomes.COMMENT_POST_400);
     });
 })
+
+app.get(`${ENDPOINT_ROOT}/admin/stats`,  authenticateToken, (req, res) => {
+    const query = `SELECT * FROM stats ORDER BY id;`;
+
+    const dbConnection = credentials.getDbConnection(USE_DEV_DB);
+
+    let p = new Promise( (resolve, reject) => {
+        dbConnection.query(query, (err, result) => {
+            if (err) {
+            reject(err);
+        } else {
+            resolve(result);
+        }
+        });
+    });
+
+    p.then( (result) => {
+        res.type(RESPONSE_TYPE);
+        res.json(result);
+    }).catch( err => {
+        console.error(err);
+        res.status(500).end("Unknown error");
+    });
+
+});
 
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
