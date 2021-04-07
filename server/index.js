@@ -6,6 +6,7 @@ require('dotenv').config();
 const express       = require('express');
 const bodyParser    = require('body-parser');
 const cors          = require('cors');
+const bcrypt        = require('bcrypt');
 const jwt           = require('jsonwebtoken');
 
 const credentials   = require('./modules/db_credentials');
@@ -37,8 +38,8 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 app.use(bodyParser());
-app.use(cors({ origin: CORS_DOMAIN}));
-// app.options('*', cors());
+// app.use(cors({ origin: CORS_DOMAIN}));
+app.options('*', cors());
 
 // ********* ROUTES
 
@@ -385,30 +386,32 @@ app.post(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
     });
 })
 
-app.get(`${ENDPOINT_ROOT}/admin/stats`,  authenticateToken, (req, res) => {
-    const query = `SELECT * FROM stats ORDER BY id;`;
+// ******************* admin
 
+app.post(`${ENDPOINT_ROOT}/admin/setPassword`, authenticateToken, async (req, res) => {
+    const password = "thisQuizIsForMark";
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const query = `UPDATE users set password = "${hashedPassword}" WHERE id = 1`;
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
 
     let p = new Promise( (resolve, reject) => {
         dbConnection.query(query, (err, result) => {
             if (err) {
-            reject(err);
-        } else {
-            resolve(result);
-        }
-        });
+                reject(err);
+            } else {
+                resolve(result.affectedRows);
+            }
+        })
     });
 
-    p.then( (result) => {
-        res.type(RESPONSE_TYPE);
-        res.json(result);
+    p.then( affectedRows => {
+        res.json( {"affectedRows": affectedRows} );
     }).catch( err => {
         console.error(err);
-        res.status(500).end("Unknown error");
+        res.status(500).send("Password set failed");
     });
+})
 
-});
 
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
@@ -448,5 +451,3 @@ function updateStats(dbConnection, method, endpoint) {
 }
 
 app.listen(3000);
-
-
