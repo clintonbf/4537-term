@@ -1,5 +1,5 @@
 import React, {useState} from 'react'; 
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'; 
+import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom'; 
 import { AuthContext } from "./context/auth";
 
 import HomePage from './Pages/HomePage'; 
@@ -31,9 +31,22 @@ function App() {
 
   return (
     <>
+
+  
     <AuthContext.Provider value={{ authTokens: getTokens(), setAuthTokens: setTokens }}>
     <Router>
+      
+            <div>
+    <Link to='/'>
+        <button> Home </button>
+    </Link>
+    </div>  
+        
+      
       <Switch>
+        
+    
+        
         <Route path='/' exact component={HomePage}/>
         <Route path='/browseAllResources' component={BrowseAllResources} /> 
         <Route path='/viewResource/:id' component={ViewResource} />

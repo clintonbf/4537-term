@@ -13,8 +13,6 @@ const BrowseAllCollections = () => {
     
     const {authTokens} = useAuth({col: []}); 
 
-    // let dummy = [{"collection_id":1,"title":"PThreads","c_description":"pthreads from Jacob Sorber","theme":"videos","url":"https://www.youtube.com/watch?v=It0OFCbbTJE","r_description":"Arguments and values in threads"},{"collection_id":1,"title":"PThreads","c_description":"pthreads from Jacob Sorber","theme":"videos","url":"https://www.youtube.com/watch?v=uA8X5zNOGw8&t=3s","r_description":"A video about pthreads"}]; 
-    // console.log(dummy); 
     
    
     const getAll = () => {
@@ -24,7 +22,6 @@ const BrowseAllCollections = () => {
             if(result.status === 200) {
                 setAllCollections(result.data); 
                 console.log(result.data); 
-                console.lod(allCollections);  
                 return result.data; 
             } else {
                 console.log(result); 

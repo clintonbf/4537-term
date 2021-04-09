@@ -49,6 +49,8 @@ const ViewResource = () => {
     }
 
     const updateResource = (id) => {
+        
+        
         let update = {"id": id, "title": editTitle, "url": editURL}; 
         let json = JSON.stringify(update); 
         
@@ -82,6 +84,7 @@ const ViewResource = () => {
         }).catch(e=>{
             console.log(e); 
         }); 
+        
         history.push('/browseAllResources');
     };
 
@@ -117,7 +120,7 @@ const ViewResource = () => {
         }); 
     } 
 
-    
+
     useEffect(() => {
         getResourceById(r_id)
         getResourceCommentsById(r_id); 
@@ -178,7 +181,7 @@ const ViewResource = () => {
                     </div>
                     <div> 
                      <label> URL: </label>
-                        <input id={`${i}title`} key={`${i}title`} defaultValue={resource[0].url} onChange={(e)=>setEditUrl(e.target.value)} />
+                        <input id={`${i}url`} key={`${i}url`} defaultValue={resource[0].url} onChange={(e)=>setEditUrl(e.target.value)} />
                     </div>
                     </div>   
                         ))}

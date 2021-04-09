@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useAuth } from '../context/auth';
 import {POST_COLLECTION, POST_RESOURCE} from '../API_calls'; 
 
+
 const AddCollection = () => {
     const {authTokens} = useAuth({col: []}); 
 
@@ -44,17 +45,21 @@ const AddCollection = () => {
         setResourceDesc(newResource); 
     }
 
-    const createCollection = (e) => { 
-      
+
+    const createCollection = async(e) => { 
+        
+        const newArray = []; 
+
         for(let i =0; i < rBox.length; i++) {
             let newResource = {"url": resourcesURL[i], "type": "video", "title": resources[i], "description": resourceDesc[i]}; 
-            let json = JSON.stringify(newResource); 
-            axios.post(POST_RESOURCE(), json, {headers: {'Authorization': 'Bearer ' + authTokens, 'Content-Type': 'application/json'}
+            let json_r = JSON.stringify(newResource); 
+            console.log("new respurces " + json_r); 
+            await axios.post(POST_RESOURCE(), json_r, {headers: {'Authorization': 'Bearer ' + authTokens, 'Content-Type': 'application/json'}
         }).then(result => {
             if(result.status === 200) {
-                const newId = resourceIDs.slice();
-                newId[resourceIDs.length] = result.data.inserted_id;  
-                setResourceIDs(newId); 
+                const newvalue = result.data.inserted_id; 
+                newArray.push(newvalue); 
+                console.log(newArray); 
             } else {
                 console.log(result); 
             }
@@ -62,15 +67,17 @@ const AddCollection = () => {
             console.log(e); 
         })
         }
-        
 
+        console.log(newArray);
+        
         const newCollectionData = {"collection": {
                 "title": title, "description": description, "theme": theme
-            }, "resources": resourceIDs
+            }, "resources": newArray
         }
         let json = JSON.stringify(newCollectionData); 
+        console.log(json); 
 
-        axios.post(POST_COLLECTION(), json, {headers: 
+        await axios.post(POST_COLLECTION(), json, {headers: 
             {'Authorization': 'Bearer ' + authTokens, 'Content-Type': 'application/json'} 
         }).then(result => {
             if(result.status === 200) {
@@ -87,6 +94,7 @@ const AddCollection = () => {
 
     return (
         <div>
+        
             <form>
             <label> Collection Title: </label>
             <input key="collection_title" type="text" id="title" defaultValue={title} onChange={e=>setTitle(e.target.value)} /> 

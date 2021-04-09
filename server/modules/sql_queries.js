@@ -14,7 +14,7 @@ const COLLECTIONS_ID    = PLAIN_COLLECTION + '/{collectionId}'
  */
 function getResource(id) {
     return [`SELECT *
-            FROM resources r, resource_comments rc
+            FROM resources r
             WHERE r.id = ${id};`];
 }
 
@@ -120,14 +120,11 @@ function getAllResources() {
  */
 function putResource(resourceObject) {
     let statement = `UPDATE resources SET `;
-
-    if (resourceObject.name) {
-        statement += `title = '${resourceObject.title}', `;
-    }
-    if (resourceObject.url) {
-        statement += `url = '${resourceObject.url}' `;
-    }
+    
+    statement += `title = '${resourceObject.title}', `;
+    statement += `url = '${resourceObject.url}' `;
     statement += `WHERE id=${resourceObject.id};`
+    
     console.log(statement); 
     return [statement]; 
 }
@@ -242,11 +239,11 @@ function putCollection(collectionObject) {
 function deleteCollection(collectionId) {
     let statements = []; 
 
-    let statementOne = `DELETE FROM collection_comments WHERE collection_id = ${collectionId};` 
-    let statementTwo = `DELETE FROM collection_resource WHERE collection_id = ${collectionId};` 
+    // let statementOne = `DELETE FROM collection_comments WHERE collection_id = ${collectionId};` 
+    let statementTwo = `DELETE FROM collection_resources WHERE collection_id = ${collectionId};` 
     let statementThree = `DELETE FROM collections WHERE id = ${collectionId};`
     
-    statements.push(statementOne);
+    // statements.push(statementOne);
     statements.push(statementTwo);
     statements.push(statementThree);
 
