@@ -3,17 +3,16 @@ const USE_DEV_DB = true;
 require('dotenv').config();
 
 //Imports
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const express       = require('express');
+const bodyParser    = require('body-parser');
+const cors          = require('cors');
+const jwt           = require('jsonwebtoken');
 
-const credentials = require('./modules/db_credentials');
-const queries = require('./modules/sql_queries');
-const validation = require('./modules/validation');
-const outcomes = require('./modules/http_messages');
-const { response } = require('express');
+const credentials   = require('./modules/db_credentials');
+const queries       = require('./modules/sql_queries');
+const validation    = require('./modules/validation');
+const outcomes      = require('./modules/http_messages');
+const { response, query }  = require('express');
 
 // HTTP method definitions
 const GET = 'GET';
@@ -144,6 +143,59 @@ app.put(`${ENDPOINT_ROOT}/resources`, authenticateToken, (req, res) => {
     })
 })
 
+// add STATS
+app.get(`${ENDPOINT_ROOT}/resourcesrandom`, authenticateToken, (req, res) => {
+    const dbConnection = credentials.getDbConnection(USE_DEV_DB);  
+
+    const querySet = queries.getRandomResouce();
+
+    const p = new Promise((resolve, reject) => {
+        dbConnection.query(querySet[0], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+
+    p.then(data => {
+        res.type('application/json');
+        res.send(data);
+        res.end();
+    }).catch(err => {
+        console.log(`Error: ${err}`);
+        res.status(400).end(outcomes.COLLECTION_GET_400);
+    })
+});
+
+
+app.get(`${ENDPOINT_ROOT}/resourcescomments/:id`, authenticateToken, (req, res) => {
+    const dbConnection = credentials.getDbConnection(USE_DEV_DB);  
+
+    const querySet = queries.getResourceComments(req.params.id); 
+
+    const p = new Promise((resolve, reject) => {
+        dbConnection.query(querySet[0], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+
+    p.then(data => {
+        res.type('application/json');
+        res.send(data);
+        res.end();
+    }).catch(err => {
+        console.log(`Error: ${err}`);
+        res.status(400).end(outcomes.COLLECTION_GET_400);
+    })
+
+});
+
 
 app.get(`${ENDPOINT_ROOT}/resources/:id`, authenticateToken, (req, res) => {
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
@@ -172,7 +224,7 @@ app.get(`${ENDPOINT_ROOT}/resources/:id`, authenticateToken, (req, res) => {
 
 });
 
-app.post(`${ENDPOINT_ROOT}/resource/:id`, authenticateToken, (req, res) => {
+app.post(`${ENDPOINT_ROOT}/resources/:id`,  authenticateToken, (req, res) => {
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
 
     const id = req.params.id;
@@ -194,15 +246,68 @@ app.post(`${ENDPOINT_ROOT}/resource/:id`, authenticateToken, (req, res) => {
 
     p.then((affectedRows) => {
         res.json({ records_updated: affectedRows });
-    }).then(() => {
-        updateStats(dbConnection, DELETE, queries.RESOURCE_ID);
+    }).then( () => {
+        updateStats(dbConnection, POST, queries.RESOURCE_ID);
     }).catch((err) => {
         res.status(400).end(outcomes.COMMENT_POST_400);
     });
 })
 
 
+app.get(`${ENDPOINT_ROOT}/resourcesAll`,  authenticateToken, (req, res) => {
+    const dbConnection = credentials.getDbConnection(USE_DEV_DB);  
+
+    const querySet = queries.getAllResources();  
+
+    const p = new Promise((resolve, reject) => {
+        dbConnection.query(querySet[0], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+
+    p.then(data => {
+        res.type('application/json');
+        res.send(data);
+        res.end();
+    }).catch(err => {
+        console.log(`Error: ${err}`);
+        res.status(400).end(outcomes.COLLECTION_GET_400);
+    })
+
+});
+
 // ******************* collection
+app.get(`${ENDPOINT_ROOT}/collectionsAll`, authenticateToken, (req, res) => {
+    const dbConnection = credentials.getDbConnection(USE_DEV_DB);
+
+    const querySet = queries.getAllCollections();
+    
+    const p = new Promise((resolve, reject) => {
+        dbConnection.query(querySet[0], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+
+    p.then(data => {
+        res.type('application/json');
+        res.send(data);
+        res.end();
+    }).catch(err => {
+        console.log(`Error: ${err}`);
+        res.status(400).end(outcomes.COLLECTION_GET_400);
+    })
+
+})
+
+
 app.get(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
 
@@ -235,6 +340,7 @@ app.get(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
     })
 });
 
+
 app.post(`${ENDPOINT_ROOT}/collections`, authenticateToken, (req, res) => {
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
 
@@ -254,16 +360,17 @@ app.post(`${ENDPOINT_ROOT}/collections`, authenticateToken, (req, res) => {
             if (err) {
                 reject(err);
             } else {
-                newCollectionId = result.insertId
+                newCollectionId = result.insertId;
+                console.log("New Collection ID: ", newCollectionId); 
                 resolve(newCollectionId);
             }
         });
     });
 
-    p.then(newId => {
+    p.then(newCollectionId => {
         const resourceIds = req.body.resources;
 
-        const querySetTwo = queries.postCollectionPartTwo(newId, resourceIds);
+        const querySetTwo = queries.postCollectionPartTwo(newCollectionId, resourceIds);
         console.log(`Second query: ${querySetTwo[0]}`);
         dbConnection.query(querySetTwo[0]);
     }).then(() => {

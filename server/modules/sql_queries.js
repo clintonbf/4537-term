@@ -89,6 +89,12 @@ function postResource(resourceObject) {
     ];
 }
 
+function getAllResources() {
+    let statement = `SELECT * FROM resources;`; 
+
+    return [statement]; 
+}
+
 /**
  * Gets the SQL statement needed to add comment to a resource.
  * 
@@ -113,15 +119,16 @@ function postResource(resourceObject) {
  * @returns  {Object} array of statements to execute in series
  */
 function putResource(resourceObject) {
-    let statement = `UPDATE resource SET `;
+    let statement = `UPDATE resources SET `;
 
     if (resourceObject.name) {
-        statement += `name = '${resourceObject.name}' `;
+        statement += `title = '${resourceObject.title}', `;
     }
     if (resourceObject.url) {
-        statement += `url = '${resourceObject.url}'`;
+        statement += `url = '${resourceObject.url}' `;
     }
-    statement += ` WHERE id = '${resourceObject.id}';`
+    statement += `WHERE id=${resourceObject.id};`
+    console.log(statement); 
     return [statement]; 
 }
 
@@ -172,6 +179,12 @@ function postCollectionPartTwo(collectionId, resourceIds) {
     statement += `(${collectionId}, ${resourceIds[resourceIds.length - 1]});`;
 
     return [statement];
+}
+
+function getAllCollections(){
+    let statement = `SELECT * FROM collections`;
+    
+    return [statement]; 
 }
 
 /**
@@ -335,6 +348,8 @@ function getStatId(endpoint, method) {
 module.exports = {
     getResource,
     getCollection,
+    getAllCollections,
+    getAllResources,
     deleteResource,
     postResource,
     putResource, 
