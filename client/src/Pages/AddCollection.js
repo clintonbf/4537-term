@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'; 
-import {Button} from '../GlobalStyle'; 
+import {Button, CenterContainer, Small_Button} from '../GlobalStyle'; 
 import axios from 'axios'; 
 import { useAuth } from '../context/auth';
 import {POST_COLLECTION, POST_RESOURCE} from '../API_calls'; 
+import { Title, TitleRow, DesTitle } from '../Components/HomeContainer/HomeContainter.elements';
 
 
 const AddCollection = () => {
@@ -94,29 +95,41 @@ const AddCollection = () => {
 
     return (
         <div>
-        
+            <TitleRow>
+                <Title>
+                    Add Collection
+                </Title>
+            </TitleRow>
+            <CenterContainer>
             <form>
-            <label> Collection Title: </label>
-            <input key="collection_title" type="text" id="title" defaultValue={title} onChange={e=>setTitle(e.target.value)} /> 
-
-            <label> Collection Description: </label>
-            <input key="collection_desription" type="text" id="descr" defaultValue={description} onChange={e=>setDescription(e.target.value)} />
-
-            <label> Theme: </label>
-            <input key="collection_theme" type="text" id="theme" defaultValue={theme} onChange={e=>setTheme(e.target.value)} />
+            <DesTitle> Collection Title: <input key="collection_title" type="text" id="title" defaultValue={title} onChange={e=>setTitle(e.target.value)} /> 
+</DesTitle>
+            
+            <DesTitle> Collection Description: <input key="collection_desription" type="text" id="descr" defaultValue={description} onChange={e=>setDescription(e.target.value)} />
+</DesTitle>
+            
+            <DesTitle> Theme: <input key="collection_theme" type="text" id="theme" defaultValue={theme} onChange={e=>setTheme(e.target.value)} />
+            </DesTitle>
             
             </form>
                 <div>
                     {rBox.map((rBox, i) => 
                     <div key={`${i}div`}> 
-                    <p> New Resource</p> 
+                    <DesTitle> New Resource: </DesTitle> 
                     <input id={`${i}name`} key={`${i}name`} name="r_name" type="text" defaultValue="New Resources Name" onChange={handleResourceTitleChange}/> 
                     <input id={`${i}desc`} key={`${i}desc`} name="r_desc" type="text" defaultValue="New Resource Description" onChange={handleResourceDescriptionChange}/> 
                     <input id={`${i}url`} key={`${i}url`} name="r_url" type="text" defaultValue="New Resource URL" onChange={handleResourceURLChange}/> 
                     </div> )};
                 </div>
-            <button onClick={appendInput}> Add Resource </button>
-            <button onClick={createCollection}> Create Collection </button>
+            
+            <div>
+                <Small_Button onClick={appendInput}> Add Resource </Small_Button>
+                <Small_Button onClick={createCollection}> Create Collection </Small_Button>
+            </div>
+          
+                
+            </CenterContainer>
+            
         </div>
     )
 }

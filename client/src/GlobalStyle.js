@@ -21,8 +21,8 @@ export const CenterContainer = styled.div`
     padding-bottom: 5%; 
 
     @media screen and (max-width: 991px){
-        padding-right: 30px; 
-        padding-left: 30px;    
+        padding-right: 20px; 
+        padding-left: 20px;    
     }
 `;
 
@@ -63,5 +63,32 @@ cursor: PointerEvent;
     }
 }
 `;
+
+export const Small_Button = styled.button`
+background: ${({alert}) => (alert ? 'red' : '#FFB800')}; 
+white-space: nowrap; 
+padding: 10px 15px; 
+color: ${({alert}) => (alert ? 'white' : '#003366')};
+margin: 5px; 
+font-size: ${({alert}) => (alert ? '15px' : '15px')};  
+outline: None; 
+border: none; 
+cursor: PointerEvent; 
+
+&:hover {
+    transition: all 0.3s ease-outerHeight; 
+    background: #fff; 
+    background: ${({alert}) => (alert ? 'red' : '#003366' )};
+    border: ${({alert}) => (alert ? '2px solid black' : '2px solid #FFB800')};
+    color: ${({alert}) => (alert ? 'black' : '#FFB800')};  
+    @media screen and (max-width: 960px) {
+        width: 100%; 
+    }
+}
+
+
+
+
+`
 
 export default GlobalStyle; 

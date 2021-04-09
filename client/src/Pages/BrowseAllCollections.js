@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'; 
-import {Button} from '../GlobalStyle'; 
 import axios from 'axios'; 
 import { useAuth } from '../context/auth';
 import {Link,  useHistory} from 'react-router-dom';
 import {GET_ALL_COLLECTION} from '../API_calls'; 
+import {Button, CenterContainer, Small_Button} from '../GlobalStyle';
+import {InfoRowLeft, TitleRow, Title, MiniContainer} from '../Components/HomeContainer/HomeContainter.elements'; 
 
 const BrowseAllCollections = () => {
     
@@ -42,24 +43,32 @@ const BrowseAllCollections = () => {
     if(allCollections) {
         console.log(allCollections); 
         content = 
-        <div>
+        <CenterContainer>
            {allCollections.map((item, i) => (
-                <div key={`${item.id}index`}> 
+                <InfoRowLeft key={`${item.id}index`}> 
                     <Link to={{pathname: `/browseCollection/${item.id}`}}> 
-                    <div key={`${item.title}_title`}> {item.title} </div> 
+                    <Button key={`${item.title}_title`}> {item.title} </Button> 
                     </Link> 
-                </div>
+                </InfoRowLeft>
            ))} 
-            </div>
+            </CenterContainer>
     }
 
 
     return (
         <div>
-            COLLECTIONS
+            <TitleRow>
+                <Title>
+                     Collections
+                </Title>
+            </TitleRow>
             {content}
-            <button onClick={handleClick}> Create a Collection </button>
-        
+            <MiniContainer>
+                  <Button onClick={handleClick}> Create New Collection </Button>
+            </MiniContainer>
+            <MiniContainer>
+                
+            </MiniContainer>
         </div>
     )
 }

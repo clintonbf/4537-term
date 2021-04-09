@@ -9,6 +9,8 @@ import BrowseAllCollections from './Pages/BrowseAllCollections';
 import AddCollection from './Pages/AddCollection'; 
 import ViewResource from './Pages/ViewResource';
 import Rando from './Pages/Rando'; 
+import { MiniContainer } from './Components/HomeContainer/HomeContainter.elements';
+import { Button, Small_Button } from './GlobalStyle';
 
 function App() {
   const [authoTokens, setauthoTokens] = useState(localStorage.getItem("tokens") || '')
@@ -36,17 +38,14 @@ function App() {
     <AuthContext.Provider value={{ authTokens: getTokens(), setAuthTokens: setTokens }}>
     <Router>
       
-            <div>
+            <MiniContainer>
     <Link to='/'>
-        <button> Home </button>
+        <Small_Button> Home </Small_Button>
     </Link>
-    </div>  
+    </MiniContainer>  
         
       
       <Switch>
-        
-    
-        
         <Route path='/' exact component={HomePage}/>
         <Route path='/browseAllResources' component={BrowseAllResources} /> 
         <Route path='/viewResource/:id' component={ViewResource} />

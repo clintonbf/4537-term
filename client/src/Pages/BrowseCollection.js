@@ -1,9 +1,10 @@
 import React, { useState, useEffect} from 'react'; 
-import {Button} from '../GlobalStyle'; 
+import {Button, Container, Small_Button, CenterContainer} from '../GlobalStyle'; 
 import axios from 'axios'; 
 import { useAuth } from '../context/auth';
 import {GET_DELETE_COLLECTION} from '../API_calls'; 
 import { useHistory, useParams } from 'react-router-dom'; 
+import { TitleRow, Title, DescRow, MiniContainer, GroupingDiv } from '../Components/HomeContainer/HomeContainter.elements';
 
 const BrowseCollection = () => {
     let params = useParams();
@@ -39,14 +40,14 @@ const BrowseCollection = () => {
 
     if(singleCollection){
         content = 
-        <div>
+        <CenterContainer>
            {singleCollection.map((item, i) => (
-                <div key={`res${i}`}> 
-                    <div key={`desc${i}`}>{item.r_description} </div> 
-                    <div key={`url${i}`}>{item.url} </div> 
-                </div>
+                <GroupingDiv key={`res${i}`}> 
+                    <DescRow key={`desc${i}`}> {i} : {item.r_description} </DescRow> 
+                    <DescRow key={`url${i}`}> URL : {item.url} </DescRow> 
+                </GroupingDiv>
            ))} 
-            </div>
+            </CenterContainer>
     } 
 
     const deleteCollection = (e, id) =>{
@@ -72,9 +73,17 @@ const BrowseCollection = () => {
 
     return (
         <div>
-            COLLECTIONS
+            <TitleRow>
+                <Title>
+                    Collection
+                </Title>
+            </TitleRow>
             {content}
-            <button onClick={()=>deleteCollection(id)}> Delete Collection </button>
+
+            <MiniContainer>
+                 <Small_Button alert onClick={()=>deleteCollection(id)}> Delete Collection </Small_Button>  
+            </MiniContainer>
+         
         </div>
     )
 }

@@ -4,6 +4,8 @@ import { useAuth } from '../context/auth';
 import {DELETE_RESOURCE, GET_RESOURCE, PUT_RESOURCE, GET_RESOURCE_COMMENT, POST_RESOURCE_COMMENT} from '../API_calls'; 
 import {Link} from 'react-router-dom'; 
 import { useParams, useHistory } from 'react-router-dom'; 
+import { CenterContainer, Small_Button } from '../GlobalStyle';
+import { DescRow, InfoRow, TitleRow, Title, MiniTitle,  MiniContainer } from '../Components/HomeContainer/HomeContainter.elements';
 
 
 const ViewResource = () => {
@@ -24,8 +26,6 @@ const ViewResource = () => {
     const [newComment, setNewComment] = useState(); 
 
     let r_id = params.id;  
-    console.log(r_id);     
-    
     const addComment = (id) => {
 
         let data = {"comment": newComment}; 
@@ -144,37 +144,40 @@ const ViewResource = () => {
         content = 
         <div>
            {resource.map((item, i) => (
-                <div key={`res${i}`}> 
-                    <div key={`${i}title`} >{item.title} </div> 
-                    <div key={`${i}desc`}> {item.description} </div>
-                    <div key={`url${i}`}>{item.url} </div> 
-                    <button onClick={editResource}> Update </button>
-                </div>
+                <CenterContainer key={`res${i}`}> 
+                    <DescRow key={`${i}title`} > Resource Title :  {item.title} </DescRow> 
+                    <DescRow key={`${i}desc`}> Description: {item.description} </DescRow>
+                    <DescRow key={`url${i}`}> URL: {item.url} </DescRow> 
+                    <DescRow>
+                        <Small_Button onClick={editResource}> Update </Small_Button>
+                    </DescRow>
+                </CenterContainer>
            ))} 
-        
-           <button> Add New Resource </button>
         </div>
     }
 
     if(comments) {
         commentContent = 
-        <div>
+        <MiniContainer>
             <h3> Comments </h3>
             {comments.map((item, i) => (
                 <p key={`${i}comment`}> {item.comment} </p>
             ))}
-        </div>
+        </MiniContainer>
     }
 
     return (
         <div>
-            View Resource 
+        <TitleRow> 
+            <Title>
+                View Resource
+            </Title> 
+        </TitleRow>
             {content}
                 <div>
                     {editBox.map((editBox, i =>
-                        <div key={`${i}div`}> 
-                        <h4> Update: </h4> 
-                    {/* DEBUG */}
+                        <MiniContainer key={`${i}div`}> 
+                        <MiniTitle> Update: </MiniTitle> 
                     <div>
                     <label> Title: </label>
                         <input id={`${i}title`} key={`${i}title`} defaultValue={resource[0].title} onChange={(e)=>setEditTitle(e.target.value)} />
@@ -183,19 +186,31 @@ const ViewResource = () => {
                      <label> URL: </label>
                         <input id={`${i}url`} key={`${i}url`} defaultValue={resource[0].url} onChange={(e)=>setEditUrl(e.target.value)} />
                     </div>
-                    </div>   
+                    </MiniContainer>   
                         ))}
                 </div>
-                <div>
-                <button onClick={() => updateResource(paramId)}> Save Changes </button>    
-                </div> 
-                <div>
-                <button onClick={() => deleteResource(paramId)}> Delete This Resource </button>
-                </div>
+                <MiniContainer>
+                <Small_Button onClick={() => updateResource(paramId)}> Save Changes </Small_Button>    
+                </MiniContainer> 
+            
             {commentContent}
+            
+            <MiniContainer>
             <h5> Add New Comment </h5>
+            
             <input id={`newcomment`} key={`comment`} defaultValue={"New Comment"} onChange={(e)=>setNewComment(e.target.value)} />
-            <button onClick={() => addComment(paramId)}> Add! </button>      
+            <Small_Button onClick={() => addComment(paramId)}> Add! </Small_Button> 
+        
+
+            </MiniContainer>
+            <MiniContainer>
+                <div>
+                    <Small_Button alert onClick={() => deleteResource(paramId)}> Delete This Resource </Small_Button>
+                </div>
+            </MiniContainer>
+            
+          
+        
         </div>
     )
 }
