@@ -7,6 +7,7 @@ const express       = require('express');
 const bodyParser    = require('body-parser');
 const cors          = require('cors');
 const jwt           = require('jsonwebtoken');
+const bcrypt        = require('bcrypt');
 
 const credentials   = require('./modules/db_credentials');
 const queries       = require('./modules/sql_queries');
@@ -487,7 +488,15 @@ app.post(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
 
 app.post(`${ENDPOINT_ROOT}/admin/setPassword`, authenticateToken, async (req, res) => {
     const password = "thisQuizIsForMark";
-    const hashedPassword = await bcrypt.hash(password, 10);
+
+    let hashedPassword;
+    try {
+        hashedPassword = await bcrypt.hash(password, 10);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send("Server error");
+    }
+
     const query = `UPDATE users set password = "${hashedPassword}" WHERE id = 1`;
     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
 
