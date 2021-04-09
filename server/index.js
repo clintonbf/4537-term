@@ -1,4 +1,4 @@
-const USE_DEV_DB = true;
+const USE_DEV_DB = false;
 
 require('dotenv').config();
 
@@ -16,15 +16,15 @@ const outcomes      = require('./modules/http_messages');
 const { response, query }  = require('express');
 
 // HTTP method definitions
-const GET = 'GET';
-const POST = 'POST';
-const PUT = 'PUT';
-const DELETE = 'DELETE;'
-const OPTIONS = 'OPTIONS';
+const GET       = 'GET';
+const POST      = 'POST';
+const PUT       = 'PUT';
+const DELETE    = 'DELETE;'
+const OPTIONS   = 'OPTIONS';
 
-const ENDPOINT_ROOT = '/COMP4537/termproject/API/v1';
-const DOMAIN = 'clintonfernandes.ca';
-const CORS_DOMAIN = 'https://emerald-k.ca'
+const ENDPOINT_ROOT     = '/COMP4537/termproject/API/v1';
+const DOMAIN            = 'clintonfernandes.ca';
+const CORS_DOMAIN       = 'https://emerald-k.ca'
 
 const app = express();
 
