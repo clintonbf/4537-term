@@ -14,7 +14,6 @@ const queries = require('./modules/sql_queries');
 const validation = require('./modules/validation');
 const outcomes = require('./modules/http_messages');
 const { response } = require('express');
-const e = require('express');
 
 // HTTP method definitions
 const GET = 'GET';
@@ -25,13 +24,11 @@ const OPTIONS = 'OPTIONS';
 
 const ENDPOINT_ROOT = '/COMP4537/termproject/API/v1';
 const DOMAIN = 'clintonfernandes.ca';
-const RESPONSE_TYPE = 'application/json';
 const CORS_DOMAIN = 'https://emerald-k.ca'
 
 const app = express();
 
 app.use((req, res, next) => {
-    // res.header('ACCESS-CONTROL-ALLOW-ORIGIN', '*');
     res.header('ACCESS-CONTROL-ALLOW-METHODS', `${GET, PUT, POST, DELETE, OPTIONS}`);
     res.header('ACCESS-CONTROL-ALLOW-HEADER', 'Content-Type, Authorization, Content-Length, X-Requested-With');
 
@@ -39,15 +36,17 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 app.use(bodyParser());
-// app.use(cors({ origin: CORS_DOMAIN}));
-app.options('*', cors());
+
+if (USE_DEV_DB) {
+    app.options('*', cors());
+} else {
+    app.use(cors({ origin: CORS_DOMAIN}));
+}
 
 // ********* ROUTES
 
 // ******************* AUTH
 app.post('/login', (req, res) => {
-    //TODO authenticate 
-
     const details = { domain: DOMAIN };
 
     const accessToken = jwt.sign(details, process.env.ACCESS_SECRET_TOKEN);
@@ -75,7 +74,6 @@ app.post(`${ENDPOINT_ROOT}/resources`, authenticateToken, (req, res) => {
     });
 
     p.then((newInsertId) => {
-        res.type('application/json');
         res.json({ inserted_id: newInsertId });
     }).then(() => {
         updateStats(dbConnection, POST, queries.PLAIN_RESOURCE);
@@ -111,7 +109,6 @@ app.delete(`${ENDPOINT_ROOT}/resources/:id`, authenticateToken, (req, res) => {
 
         dbConnection.query(querySet[2]);
     }).then((id) => {
-        res.type('application/json');
         res.json({ outcome: outcomes.RESOURCE_DELETE_201 });
         res.end();
     }).then(() => {
@@ -137,7 +134,6 @@ app.put(`${ENDPOINT_ROOT}/resources`, authenticateToken, (req, res) => {
     });
 
     p.then(data => {
-        res.type('application/json');
         res.send(data);
         res.end();
     }).then(() => {
@@ -165,7 +161,6 @@ app.get(`${ENDPOINT_ROOT}/resources/:id`, authenticateToken, (req, res) => {
     });
 
     p.then(data => {
-        res.type('application/json');
         res.send(data);
         res.end();
     }).then(() => {
@@ -198,7 +193,6 @@ app.post(`${ENDPOINT_ROOT}/resource/:id`, authenticateToken, (req, res) => {
     });
 
     p.then((affectedRows) => {
-        res.type('application/json');
         res.json({ records_updated: affectedRows });
     }).then(() => {
         updateStats(dbConnection, DELETE, queries.RESOURCE_ID);
@@ -231,7 +225,6 @@ app.get(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
     });
 
     p.then(data => {
-        res.type('application/json');
         res.send(data);
         res.end();
     }).then(() => {
@@ -274,7 +267,6 @@ app.post(`${ENDPOINT_ROOT}/collections`, authenticateToken, (req, res) => {
         console.log(`Second query: ${querySetTwo[0]}`);
         dbConnection.query(querySetTwo[0]);
     }).then(() => {
-        res.type('application/json');
         res.json({ inserted_id: newCollectionId });
     }).then(() => {
         updateStats(dbConnection, POST, queries.PLAIN_COLLECTION);
@@ -309,7 +301,6 @@ app.put(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
     });
 
     p.then((affectedRows) => {
-        res.type('application/json');
         res.json({ records_updated: affectedRows });
     }).then(() => {
         updateStats(dbConnection, PUT, queries.COLLECTIONS_ID);
@@ -347,7 +338,6 @@ app.delete(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => 
 
         dbConnection.query(querySet[2]);
     }).then((id) => {
-        res.type('application/json');
         res.json({ outcome: outcomes.COLLECTION_DELETE_201 });
         res.end();
     }).then(() => {
@@ -378,7 +368,6 @@ app.post(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
     });
 
     p.then((affectedRows) => {
-        res.type('application/json');
         res.json({ records_updated: affectedRows });
     }).then(() => {
         updateStats(dbConnection, DELETE, queries.RESOURCE_ID);
@@ -413,7 +402,7 @@ app.post(`${ENDPOINT_ROOT}/admin/setPassword`, authenticateToken, async (req, re
     });
 })
 
-app.post(`${ENDPOINT_ROOT}/admin/stats`, async (req, res) => {
+app.post(`${ENDPOINT_ROOT}/admin/stats`, authenticateToken, (req, res) => {
     const loginQuery = `SELECT password FROM users WHERE id = 1`;
     const statsQuery = `SELECT * FROM stats ORDER BY id;`;
 
