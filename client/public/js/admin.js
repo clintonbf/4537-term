@@ -11,7 +11,8 @@ async function getStats() {
 
     const initObject = {
         method: "GET",
-        headers: headers
+        headers: headers,
+        password: "thisQuizIsForMark"
     };
 
     let res = await fetch(URL, initObject);
