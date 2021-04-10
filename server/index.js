@@ -37,7 +37,6 @@ app.use(cors({ origin: CORS_DOMAIN}));
 app.options(CORS_DOMAIN, cors());
 
 app.use((req, res, next) => {
-    // res.header('ACCESS-CONTROL-ALLOW-ORIGIN', '*'); 
     res.header('ACCESS-CONTROL-ALLOW-METHODS', `${GET, PUT, POST, DELETE, OPTIONS}`);
     res.header('ACCESS-CONTROL-ALLOW-HEADER', 'Content-Type, Authorization, Content-Length, X-Requested-With');
 
@@ -45,7 +44,6 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 app.use(bodyParser());
-
 
 // ********* ROUTES
 
