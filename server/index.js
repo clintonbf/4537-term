@@ -1,4 +1,4 @@
-const USE_DEV_DB = false;
+const USE_DEV_DB = true;
 
 require('dotenv').config();
 
@@ -22,9 +22,14 @@ const PUT       = 'PUT';
 const DELETE    = 'DELETE;'
 const OPTIONS   = 'OPTIONS';
 
+const CLINT_DOMAIN      = 'clintonfernandes.ca';
+const EM_DOMAIN         = 'emerald-k.ca';
+const EM_DOMAIN_2       = 'https://friendly-mestorf-c3d0de.netlify.app/';
+
 const ENDPOINT_ROOT     = '/COMP4537/termproject/API/v1';
-const DOMAIN            = 'clintonfernandes.ca';
-const CORS_DOMAIN       = 'https://emerald-k.ca'
+const DOMAIN            = CLINT_DOMAIN;
+const CLIENT_DOMAIN     = EM_DOMAIN_2;
+const CORS_DOMAIN       = CLIENT_DOMAIN
 
 const app = express();
 
