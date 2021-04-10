@@ -1,5 +1,5 @@
 import React, {useState} from 'react'; 
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'; 
+import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom'; 
 import { AuthContext } from "./context/auth";
 
 import HomePage from './Pages/HomePage'; 
@@ -9,6 +9,8 @@ import BrowseAllCollections from './Pages/BrowseAllCollections';
 import AddCollection from './Pages/AddCollection'; 
 import ViewResource from './Pages/ViewResource';
 import Rando from './Pages/Rando'; 
+import { MiniContainer } from './Components/HomeContainer/HomeContainter.elements';
+import { Button, Small_Button } from './GlobalStyle';
 
 function App() {
   const [authoTokens, setauthoTokens] = useState(localStorage.getItem("tokens") || '')
@@ -31,8 +33,18 @@ function App() {
 
   return (
     <>
+
+  
     <AuthContext.Provider value={{ authTokens: getTokens(), setAuthTokens: setTokens }}>
     <Router>
+      
+            <MiniContainer>
+    <Link to='/'>
+        <Small_Button> Home </Small_Button>
+    </Link>
+    </MiniContainer>  
+        
+      
       <Switch>
         <Route path='/' exact component={HomePage}/>
         <Route path='/browseAllResources' component={BrowseAllResources} /> 

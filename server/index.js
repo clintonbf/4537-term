@@ -34,6 +34,7 @@ const CORS_DOMAIN       = CLIENT_DOMAIN
 const app = express();
 
 app.use((req, res, next) => {
+    res.header('ACCESS-CONTROL-ALLOW-ORIGIN', '*'); 
     res.header('ACCESS-CONTROL-ALLOW-METHODS', `${GET, PUT, POST, DELETE, OPTIONS}`);
     res.header('ACCESS-CONTROL-ALLOW-HEADER', 'Content-Type, Authorization, Content-Length, X-Requested-With');
 
@@ -42,11 +43,11 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(bodyParser());
 
-if (USE_DEV_DB) {
+// if (USE_DEV_DB) {
     app.options('*', cors());
-} else {
-    app.use(cors({ origin: CORS_DOMAIN}));
-}
+// } else {
+//     app.use(cors({ origin: CORS_DOMAIN}));
+// }
 
 // ********* ROUTES
 
@@ -446,10 +447,6 @@ app.delete(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => 
         console.log(`Query 2: ${querySet[1]}`);
 
         dbConnection.query(querySet[1]);
-    }).then((id) => {
-        console.log(`Query 3: ${querySet[2]}`);
-
-        dbConnection.query(querySet[2]);
     }).then((id) => {
         res.json({ outcome: outcomes.COLLECTION_DELETE_201 });
         res.end();

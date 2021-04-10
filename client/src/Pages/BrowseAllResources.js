@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'; 
-import {Button, CenterContainer} from '../GlobalStyle';
-import {InfoRowLeft, TitleRow, Title} from '../Components/HomeContainer/HomeContainter.elements'; 
+import {Button, CenterContainer, Small_Button} from '../GlobalStyle';
+import {InfoRowLeft, TitleRow, Title, MiniContainer, MiniTitle, DesTitle, InputOutline} from '../Components/HomeContainer/HomeContainter.elements'; 
 import axios from 'axios'; 
 import { useAuth } from '../context/auth';
 import {GET_All_RESOURCE, POST_RESOURCE} from '../API_calls'; 
@@ -80,27 +80,20 @@ const BrowseAll = () => {
             </TitleRow>
         {content}
      
-        <div>
-        <label> Title: </label>
-            <input key="r_title" type="text" id="title" defaultValue={"Snappy Title"} onChange={e=>setNewResourceTitle(e.target.value)} />
-        </div>
-        <div>
-        <label> Description: </label>
-            <input key="r_desc" type="text" id="descr" defaultValue={"Exciting Descr"} onChange={e=>setNewResourceDescription(e.target.value)} />
-        </div>
-        <div>
-        <label> Type: </label>
-            <input key="r_type" type="text" id="type" defaultValue={"Video?"} onChange={e=>setNewResourceType(e.target.value)} />
-        </div>
-        <div>
-        <label> URL: </label>
-            <input key="r_url" type="text" id="url" defaultValue={"URL"} onChange={e=>setNewResourceURL(e.target.value)} />
-        </div>   
-        <div>
-        <button onClick={()=>AddNewResource()}> Add Resource </button> 
-        </div>
-        </div>
+        <MiniContainer>
+        <DesTitle> Title: <input key="r_title" type="text" id="title" defaultValue={"Snappy Title"} onChange={e=>setNewResourceTitle(e.target.value)} />
+        </DesTitle>
+        <DesTitle> Description: <input key="r_desc" type="text" id="descr" defaultValue={"Exciting Descr"} onChange={e=>setNewResourceDescription(e.target.value)} />
+    </DesTitle>
+      
+        <DesTitle> Type: <input key="r_type" type="text" id="type" defaultValue={"Video?"} onChange={e=>setNewResourceType(e.target.value)} />
+    </DesTitle>
+                
+        <DesTitle> URL: <input key="r_url" type="text" id="url" defaultValue={"URL"} onChange={e=>setNewResourceURL(e.target.value)} />
+        </DesTitle>
+        <Small_Button onClick={()=>AddNewResource()}> Add Resource </Small_Button> 
+        </ MiniContainer>
+        </div>       
     )
 }
-
 export default BrowseAll; 

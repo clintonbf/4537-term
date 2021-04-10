@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'; 
 import { useAuth } from '../context/auth';
 import {GET_RANDOM_RESOURCE} from '../API_calls'; 
+import { DescRow, Title, TitleRow } from '../Components/HomeContainer/HomeContainter.elements';
+import { CenterContainer } from '../GlobalStyle';
 
 
 const Rando = () => {
@@ -34,19 +36,21 @@ const Rando = () => {
     
     if(randomResource) {
         content = 
-        <div>
-            <p> {randomResource[0].title} </p>
-            <p> {randomResource[0].description} </p>
-            <p> {randomResource[0].url} </p>
-        </div>
+        <CenterContainer>
+            <DescRow> Title: {randomResource[0].title} </DescRow>
+            <DescRow> Description: {randomResource[0].description} </DescRow>
+            <DescRow> URL: {randomResource[0].url} </DescRow>
+        </CenterContainer>
     }
 
     return (
         <div>
             <div>
-                <h3>
-                     Random Resource
-                </h3>
+                <TitleRow>
+                    <Title>
+                    Random Resource
+                    </Title>
+                </TitleRow>
             </div>
             {content}
         </div>
