@@ -454,33 +454,33 @@ app.delete(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => 
         });
 });
 
-app.post(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
-    const dbConnection = credentials.getDbConnection(USE_DEV_DB);
-    const id = req.params.id;
+// app.post(`${ENDPOINT_ROOT}/collections/:id`, authenticateToken, (req, res) => {
+//     const dbConnection = credentials.getDbConnection(USE_DEV_DB);
+//     const id = req.params.id;
 
-    const querySet = queries.postCollectionComment(id, req.body);
+//     const querySet = queries.postCollectionComment(id, req.body);
 
-    console.log(`Query: ${querySet[0]}`);
+//     console.log(`Query: ${querySet[0]}`);
 
-    let p = new Promise((resolve, reject) => {
-        dbConnection.query(querySet[0], (err, result) => {
-            if (err) {
-                console.error(err);
-                reject(err);
-            } else {
-                resolve(result.affectedRows);
-            }
-        });
-    });
+//     let p = new Promise((resolve, reject) => {
+//         dbConnection.query(querySet[0], (err, result) => {
+//             if (err) {
+//                 console.error(err);
+//                 reject(err);
+//             } else {
+//                 resolve(result.affectedRows);
+//             }
+//         });
+//     });
 
-    p.then((affectedRows) => {
-        res.json({ records_updated: affectedRows });
-    }).then(() => {
-        updateStats(dbConnection, DELETE, queries.RESOURCE_ID);
-    }).catch((err) => {
-        res.status(400).end(outcomes.COMMENT_POST_400);
-    });
-})
+//     p.then((affectedRows) => {
+//         res.json({ records_updated: affectedRows });
+//     }).then(() => {
+//         updateStats(dbConnection, DELETE, queries.RESOURCE_ID);
+//     }).catch((err) => {
+//         res.status(400).end(outcomes.COMMENT_POST_400);
+//     });
+// })
 
 // ******************* admin
 
