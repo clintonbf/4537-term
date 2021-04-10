@@ -1,8 +1,5 @@
-const URL = "http://localhost:3000/COMP4537/termproject/API/v1"; 
+const URL = "https://clintonfernandes.ca/COMP4537/termproject/API/v1"; 
 
-// const LOGIN = () => {
-//     return "http://clintonf_tutorial_catalogue/login"; 
-// }
 
 const POST_RESOURCE = () => {
     return `${URL}/resources`; 

@@ -8,7 +8,7 @@ import axios from 'axios';
 
 const HomeContainer = () => {
 
-    const ENDPOINT_URL = "http://localhost:3000/login"
+    const ENDPOINT_URL = "https://clintonfernandes.ca/COMP4537/termproject/API/v1/login"
     const {setAuthTokens } = useAuth(); 
 
     function postLogin(e) {
@@ -34,7 +34,7 @@ const HomeContainer = () => {
         </TitleRow>
        
         <CenterContainer>
-        <LoginButton onClick={postLogin}> Login </LoginButton>
+        <LoginButton onClick={postLogin}> Get Auth Key </LoginButton>
             <InfoRow>
                 <Link to='/browseAllResources'>
                 <Button> Browse All </Button>
