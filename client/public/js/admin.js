@@ -10,7 +10,7 @@ async function getStats() {
     headers.append('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkb21haW4iOiJjbGludG9uZmVybmFuZGVzLmNhIiwiaWF0IjoxNjE3MTYwNTY1fQ.e64XGL7yjA2cFzLLtxp6lO8v5Yn5eudcRY2opVtGCtI');
 
     const initObject = {
-        method: "GET",
+        method: "POST",
         headers: headers,
         password: "thisQuizIsForMark"
     };
