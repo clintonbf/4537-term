@@ -1,4 +1,4 @@
-const USE_DEV_DB = true;
+const USE_DEV_DB = false;
 
 require('dotenv').config();
 
@@ -23,18 +23,21 @@ const DELETE    = 'DELETE;'
 const OPTIONS   = 'OPTIONS';
 
 const CLINT_DOMAIN      = 'clintonfernandes.ca';
-const EM_DOMAIN         = 'emerald-k.ca';
+const EM_DOMAIN         = 'https://emerald-k.ca';
 const EM_DOMAIN_2       = 'https://friendly-mestorf-c3d0de.netlify.app/';
 
 const ENDPOINT_ROOT     = '/COMP4537/termproject/API/v1';
 const DOMAIN            = CLINT_DOMAIN;
-const CLIENT_DOMAIN     = EM_DOMAIN_2;
+const CLIENT_DOMAIN     = EM_DOMAIN;
 const CORS_DOMAIN       = CLIENT_DOMAIN
 
 const app = express();
 
+app.use(cors({ origin: CORS_DOMAIN}));
+app.options(CORS_DOMAIN, cors());
+
 app.use((req, res, next) => {
-    res.header('ACCESS-CONTROL-ALLOW-ORIGIN', '*'); 
+    // res.header('ACCESS-CONTROL-ALLOW-ORIGIN', '*'); 
     res.header('ACCESS-CONTROL-ALLOW-METHODS', `${GET, PUT, POST, DELETE, OPTIONS}`);
     res.header('ACCESS-CONTROL-ALLOW-HEADER', 'Content-Type, Authorization, Content-Length, X-Requested-With');
 
@@ -43,16 +46,11 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(bodyParser());
 
-// if (USE_DEV_DB) {
-    app.options('*', cors());
-// } else {
-//     app.use(cors({ origin: CORS_DOMAIN}));
-// }
 
 // ********* ROUTES
 
 // ******************* AUTH
-app.post('/login', (req, res) => {
+app.post(`${ENDPOINT_ROOT}/login`, (req, res) => {
     const details = { domain: DOMAIN };
 
     const accessToken = jwt.sign(details, process.env.ACCESS_SECRET_TOKEN);
